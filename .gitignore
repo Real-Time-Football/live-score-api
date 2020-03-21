@@ -11,6 +11,3 @@ target/
 *.ipr
 
 .DS_Store
-.mvn/
-mvnw
-mvnw.cmd
