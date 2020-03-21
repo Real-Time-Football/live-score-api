@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 
 @Value
 public class GoalScoredEvent extends Event {
-    public GoalScoredEvent(String matchId, LocalDateTime timeStamp, String userId, String version) {
+    private final String team;
+
+    public GoalScoredEvent(String matchId, LocalDateTime timeStamp, String userId, String version, String team) {
         super(matchId, timeStamp, userId, version);
+        this.team = team;
     }
 }

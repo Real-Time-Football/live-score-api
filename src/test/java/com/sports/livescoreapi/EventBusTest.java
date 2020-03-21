@@ -56,7 +56,7 @@ class EventBusTest {
         MatchStartedEvent event = new MatchStartedEvent(matchId, LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
         eventBus.send(event);
 
-        GoalScoredEvent secondEvent = new GoalScoredEvent(matchId, LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
+        GoalScoredEvent secondEvent = new GoalScoredEvent(matchId, LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION, "Home");
         eventBus.send(secondEvent);
 
         verify(eventStore, times(2)).save(any());

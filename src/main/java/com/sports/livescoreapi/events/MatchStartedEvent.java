@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Value
 public class MatchStartedEvent extends Event {
-    public MatchStartedEvent(String matchId, LocalDateTime timeStamp, String userId, String version) {
-        super(matchId, timeStamp, userId, version);
+    public MatchStartedEvent(String aggregateId, LocalDateTime timeStamp, String userId, String version) {
+        super(aggregateId, timeStamp, userId, version);
     }
 }
