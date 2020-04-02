@@ -65,7 +65,7 @@
 						<configuration>
 							<hooks>
 								<pre-push>
-									echo running tests
+									echo running tests...
 									exec mvn test
 								</pre-push>
 							</hooks>
