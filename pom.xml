@@ -53,6 +53,25 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.sandbox</groupId>
+				<artifactId>githook-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>install</goal>
+						</goals>
+						<configuration>
+							<hooks>
+								<pre-push>
+									echo running tests
+									exec mvn test
+								</pre-push>
+							</hooks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
