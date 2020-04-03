@@ -34,8 +34,8 @@ class MatchAggregateTest {
         MatchAggregate matchAggregate = new MatchAggregate(eventBus);
 
         MatchStartedEvent event = new MatchStartedEvent("123", LocalDateTime.now(), "user", "1.0");
-        GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Home");
-        GoalScoredEvent visitorsGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Visitors");
+        GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", TeamSide.HOME);
+        GoalScoredEvent visitorsGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", TeamSide.VISITORS);
 
         matchAggregate.on(event);
         matchAggregate.on(homeGoalEvent);
@@ -50,7 +50,7 @@ class MatchAggregateTest {
         EventBus eventBus = mock(EventBus.class);
         MatchAggregate matchAggregate = new MatchAggregate(eventBus);
 
-        GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Home");
+        GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", TeamSide.HOME);
 
         matchAggregate.on(homeGoalEvent);
 

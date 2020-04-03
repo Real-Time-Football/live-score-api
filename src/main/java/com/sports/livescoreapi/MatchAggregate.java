@@ -33,11 +33,11 @@ public class MatchAggregate extends Aggregate {
             return;
         }
 
-        switch (event.getTeam()) {
-            case "Home":
+        switch (event.getTeamSide()) {
+            case HOME:
                 homeScore += 1;
                 break;
-            case  "Visitors":
+            case  VISITORS:
                 visitorsScore += 1;
                 break;
         }

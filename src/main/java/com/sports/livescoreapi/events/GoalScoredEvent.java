@@ -1,14 +1,15 @@
 package com.sports.livescoreapi.events;
 
+import com.sports.livescoreapi.TeamSide;
 import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
 public class GoalScoredEvent extends Event {
-    private final String team;
+    private final TeamSide teamSide;
 
-    public GoalScoredEvent(String matchId, LocalDateTime timeStamp, String userId, String version, String team) {
+    public GoalScoredEvent(String matchId, LocalDateTime timeStamp, String userId, String version, TeamSide teamSide) {
         super(matchId, timeStamp, userId, version);
-        this.team = team;
+        this.teamSide = teamSide;
     }
 }

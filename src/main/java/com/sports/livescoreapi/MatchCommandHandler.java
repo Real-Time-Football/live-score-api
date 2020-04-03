@@ -37,7 +37,7 @@ public class MatchCommandHandler extends CommandHandler {
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion(),
-                ""
+                command.getTeamSide()
         ));
     }
 }
