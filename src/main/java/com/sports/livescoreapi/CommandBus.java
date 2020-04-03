@@ -33,7 +33,7 @@ public class CommandBus {
         commandHandlerStarters.putIfAbsent(startEvent, event);
     }
 
-    public <T extends Command> void send(T command) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+    public <T extends Command> void send(T command) throws ReflectiveOperationException {
         try {
 
             startRegisteredHandler(command);
