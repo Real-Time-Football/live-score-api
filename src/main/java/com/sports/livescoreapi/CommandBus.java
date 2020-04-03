@@ -33,77 +33,62 @@ public class CommandBus {
         commandHandlerStarters.putIfAbsent(startEvent, event);
     }
 
-    public <T extends Command> void send(T command) {
-        startRegisteredHandler(command);
-        deliverCommandToHandler(command);
+    public <T extends Command> void send(T command) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        try {
+
+            startRegisteredHandler(command);
+
+            deliverCommandToHandler(command);
+
+        } catch (NoSuchMethodException e) {
+            throw e;
+        } catch (IllegalAccessException e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            throw e;
+        } catch (InstantiationException e) {
+            throw e;
+        }
+
+        //todo Log errors with some framework
     }
 
-    private <T extends Command> void startRegisteredHandler(T command) {
+    private <T extends Command> void startRegisteredHandler(T command) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (commandHandlerStarters.containsKey(command.getClass()))
         {
             Class<?> commandType = commandHandlerStarters.get(command.getClass());
             CommandHandler handlerInstance;
 
-            try {
-                handlerInstance = (CommandHandler) commandType.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
-            } catch (InstantiationException e) {
-                System.out.println(e);
-                return;
-            } catch (IllegalAccessException e){
-                System.out.println(e);
-                return;
-            } catch (NoSuchMethodException e) {
-                System.out.println(e);
-                return;
-            } catch (InvocationTargetException e) {
-                System.out.println(e);
-                return;
-            }
+            handlerInstance = (CommandHandler) commandType.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
 
             if (handlerInstance == null)
                 return;
 
-            Optional<Method> starterMethod = getMethodAnnotatedWith(command, handlerInstance.getClass(), StartWithMessage.class);
+            Optional<Method> starterMethod = getMethodAnnotatedWith(command, handlerInstance.getClass(), HandleStarterCommand.class);
 
             if(!starterMethod.isPresent()) {
                 return;
             }
 
-            try {
-                starterMethod.get().invoke(handlerInstance, command);
-            } catch (IllegalAccessException e) {
-                System.out.println(e);
-                return;
-            } catch (InvocationTargetException e) {
-                System.out.println(e);
-                return;
-            }
+            starterMethod.get().invoke(handlerInstance, command);
 
             commandHandlerInstances.putIfAbsent(handlerInstance.getAggregateId(), handlerInstance);
         }
     }
 
-    private <T extends Command> void deliverCommandToHandler(T command) {
+    private <T extends Command> void deliverCommandToHandler(T command) throws InvocationTargetException, IllegalAccessException {
 
         if (commandHandlerInstances.containsKey(command.getAggregateId()))
         {
             Object commandHandler = commandHandlerInstances.get(command.getAggregateId());
 
-            Optional<Method> handlerMethod = getMethodAnnotatedWith(command, commandHandler.getClass(), CanHandleMessage.class);
+            Optional<Method> handlerMethod = getMethodAnnotatedWith(command, commandHandler.getClass(), HandleCommand.class);
 
             if(!handlerMethod.isPresent()) {
                 return;
             }
 
-            try {
-                handlerMethod.get().invoke(commandHandler, command);
-            } catch (IllegalAccessException e) {
-                System.out.println(e);
-                return;
-            } catch (InvocationTargetException e) {
-                System.out.println(e);
-                return;
-            }
+            handlerMethod.get().invoke(commandHandler, command);
         }
     }
 

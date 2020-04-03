@@ -24,7 +24,7 @@ class CommandBusTest {
     }
 
     @Test
-    void create_instance_of_command_handler() {
+    void create_instance_of_command_handler() throws Throwable {
         EventBus eventBus = mock(EventBus.class);
         CommandBus commandBus = new CommandBus(eventBus);
         commandBus.registerCommandHandlerStarter(StartMatchCommand.class, MatchCommandHandler.class);
@@ -36,7 +36,7 @@ class CommandBusTest {
     }
 
     @Test
-    void deliver_command_to_handler() {
+    void deliver_command_to_handler() throws Throwable {
         EventBus eventBus = mock(EventBus.class);
         CommandBus commandBus = new CommandBus(eventBus);
         commandBus.registerCommandHandlerStarter(StartMatchCommand.class, MatchCommandHandler.class);

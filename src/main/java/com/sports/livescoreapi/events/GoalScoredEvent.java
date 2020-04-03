@@ -1,10 +1,9 @@
 package com.sports.livescoreapi.events;
 
-import lombok.Value;
-
+import lombok.Getter;
 import java.time.LocalDateTime;
 
-@Value
+@Getter
 public class GoalScoredEvent extends Event {
     private final String team;
 

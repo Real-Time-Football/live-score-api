@@ -18,30 +18,26 @@ public class MatchCommandHandler extends CommandHandler {
         this.eventBus = eventBus;
     }
 
-    @StartWithMessage
-    public void startMatch(StartMatchCommand command) {
+    @HandleStarterCommand
+    public void handle(StartMatchCommand command) {
         this.setAggregateId(command.getAggregateId());
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(
+        eventBus.send(new MatchStartedEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion()
-        );
-
-        eventBus.send(matchStartedEvent);
+        ));
     }
 
-    @CanHandleMessage
+    @HandleCommand
     public void handle(ScoreCommand command) {
-        GoalScoredEvent goalScoredEvent = new GoalScoredEvent(
+        eventBus.send(new GoalScoredEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion(),
                 ""
-        );
-
-        eventBus.send(goalScoredEvent);
+        ));
     }
 }

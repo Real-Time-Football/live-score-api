@@ -61,7 +61,7 @@ public class EventBus {
             if (aggregateInstance == null)
                 return;
 
-            Optional<Method> starterMethod = getMethodAnnotatedWith(event, aggregateInstance.getClass(), StartWithMessage.class);
+            Optional<Method> starterMethod = getMethodAnnotatedWith(event, aggregateInstance.getClass(), HandleStarterCommand.class);
 
             if(!starterMethod.isPresent()) {
                 return;
@@ -87,7 +87,7 @@ public class EventBus {
         {
             Object aggregate = aggregateInstances.get(event.getAggregateId());
 
-            Optional<Method> handler = getMethodAnnotatedWith(event, aggregate.getClass(), CanHandleMessage.class);
+            Optional<Method> handler = getMethodAnnotatedWith(event, aggregate.getClass(), HandleCommand.class);
 
             if(!handler.isPresent()) {
                 return;
