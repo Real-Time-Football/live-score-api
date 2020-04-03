@@ -47,7 +47,7 @@ class CommandBusTest {
         ScoreCommand scoreCommand = new ScoreCommand(startCommand.getAggregateId(), DEFAULT_USER_ID, DEFAULT_VERSION, TeamSide.HOME);
         commandBus.send(scoreCommand);
 
-        verify(eventBus, times(1)).send(any(MatchStartedEvent.class));
-        verify(eventBus, times(1)).send(any(GoalScoredEvent.class));
+        verify(eventBus, times(1)).post(any(MatchStartedEvent.class));
+        verify(eventBus, times(1)).post(any(GoalScoredEvent.class));
     }
 }

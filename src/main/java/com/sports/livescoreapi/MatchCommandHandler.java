@@ -22,7 +22,7 @@ public class MatchCommandHandler extends CommandHandler {
     public void handle(StartMatchCommand command) {
         this.setAggregateId(command.getAggregateId());
 
-        eventBus.send(new MatchStartedEvent(
+        eventBus.post(new MatchStartedEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
@@ -32,7 +32,7 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(ScoreCommand command) {
-        eventBus.send(new GoalScoredEvent(
+        eventBus.post(new GoalScoredEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),

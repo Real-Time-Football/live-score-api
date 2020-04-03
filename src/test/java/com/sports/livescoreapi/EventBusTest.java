@@ -40,7 +40,7 @@ class EventBusTest {
         eventBus.registerEvent(MatchStartedEvent.class, MatchAggregate.class);
 
         MatchStartedEvent event = new MatchStartedEvent(getNewMatchId(), LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
-        eventBus.send(event);
+        eventBus.post(event);
 
         assertEquals(1, eventBus.getAggregateInstances().size());
     }
@@ -54,10 +54,10 @@ class EventBusTest {
         String matchId = getNewMatchId();
 
         MatchStartedEvent event = new MatchStartedEvent(matchId, LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
-        eventBus.send(event);
+        eventBus.post(event);
 
         GoalScoredEvent secondEvent = new GoalScoredEvent(matchId, LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION, "Home");
-        eventBus.send(secondEvent);
+        eventBus.post(secondEvent);
 
         verify(eventStore, times(2)).save(any());
     }

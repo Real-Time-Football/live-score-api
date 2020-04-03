@@ -27,7 +27,7 @@ public class EventBus {
         aggregateStarters.putIfAbsent(startEvent, event);
     }
 
-    public <T extends Event> void send(T event) {
+    public <T extends Event> void post(T event) {
 
         tryStartRegisteredAggregate(event);
 
@@ -35,6 +35,11 @@ public class EventBus {
 
         eventStore.save(event);
     }
+
+    //post
+    //deliverEventToAggregates
+    //persistEvent
+    //replayEvents
 
     private <T extends Event> void tryStartRegisteredAggregate(T event) {
         if (aggregateStarters.containsKey(event.getClass()))

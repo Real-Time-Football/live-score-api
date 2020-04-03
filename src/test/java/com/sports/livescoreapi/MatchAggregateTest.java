@@ -23,7 +23,7 @@ class MatchAggregateTest {
 
         MatchStartedEvent event = new MatchStartedEvent("123", LocalDateTime.now(), "user", "1.0");
 
-        matchAggregate.startMatch(event);
+        matchAggregate.on(event);
 
         assertThat(matchAggregate.getAggregateId()).isEqualTo("123");
     }
@@ -37,9 +37,9 @@ class MatchAggregateTest {
         GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Home");
         GoalScoredEvent visitorsGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Visitors");
 
-        matchAggregate.startMatch(event);
-        matchAggregate.handle(homeGoalEvent);
-        matchAggregate.handle(visitorsGoalEvent);
+        matchAggregate.on(event);
+        matchAggregate.on(homeGoalEvent);
+        matchAggregate.on(visitorsGoalEvent);
 
         assertThat(matchAggregate.getHomeScore()).isEqualTo(1);
         assertThat(matchAggregate.getVisitorsScore()).isEqualTo(1);
@@ -52,7 +52,7 @@ class MatchAggregateTest {
 
         GoalScoredEvent homeGoalEvent = new GoalScoredEvent("123", LocalDateTime.now(), "user", "1.0", "Home");
 
-        matchAggregate.handle(homeGoalEvent);
+        matchAggregate.on(homeGoalEvent);
 
         assertThat(matchAggregate.getHomeScore()).isEqualTo(0);
     }

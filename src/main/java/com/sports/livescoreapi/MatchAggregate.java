@@ -21,14 +21,14 @@ public class MatchAggregate extends Aggregate {
     }
 
     @HandleStarterCommand
-    public void startMatch(MatchStartedEvent event) {
+    public void on(MatchStartedEvent event) {
         // Set the ID of the saga
         this.setAggregateId(event.getAggregateId());
         matchState = MatchState.STARTED;
     }
 
     @HandleCommand
-    public void handle(GoalScoredEvent event) {
+    public void on(GoalScoredEvent event) {
         if(matchState != MatchState.STARTED) {
             return;
         }
