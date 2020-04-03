@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class MatchAggregateTest {
 
@@ -49,5 +50,16 @@ class MatchAggregateTest {
 
         assertThat(matchAggregate.getHomeScore()).isEqualTo(0);
         assertThat(matchAggregate.getVisitorsScore()).isEqualTo(0);
+    }
+
+    @Test
+    void ends_match() {
+        String matchId = UUID.randomUUID().toString();
+        MatchAggregate matchAggregate = new MatchAggregate(matchId);
+
+        matchAggregate.start();
+        matchAggregate.end();
+
+        assertFalse(matchAggregate.areTeamsPlaying());
     }
 }

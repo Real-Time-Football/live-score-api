@@ -1,11 +1,5 @@
 package com.sports.livescoreapi;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter(AccessLevel.PRIVATE)
 public class MatchAggregate extends Aggregate {
 
     private boolean teamsArePlaying;
@@ -14,6 +8,18 @@ public class MatchAggregate extends Aggregate {
 
     public MatchAggregate(String matchId) {
         super(matchId);
+    }
+
+    public boolean areTeamsPlaying() {
+        return teamsArePlaying;
+    }
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
+    public int getVisitorsScore() {
+        return visitorsScore;
     }
 
     public void start() {
@@ -30,5 +36,9 @@ public class MatchAggregate extends Aggregate {
         if (teamsArePlaying) {
             visitorsScore += 1;
         }
+    }
+
+    public void end() {
+        teamsArePlaying = false;
     }
 }

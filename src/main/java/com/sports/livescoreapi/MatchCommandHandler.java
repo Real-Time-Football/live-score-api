@@ -1,8 +1,10 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.commands.EndMatchCommand;
 import com.sports.livescoreapi.commands.ScoreCommand;
 import com.sports.livescoreapi.commands.StartMatchCommand;
 import com.sports.livescoreapi.events.GoalScoredEvent;
+import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,6 +60,23 @@ public class MatchCommandHandler extends CommandHandler {
                 command.getUserId(),
                 command.getVersion(),
                 command.getTeamSide()
+        ));
+    }
+
+    @HandleCommand
+    public void handle(EndMatchCommand command) {
+
+        if (match == null) {
+            return;
+        }
+
+        match.end();
+
+        eventBus.post(new MatchEndedEvent(
+                command.getAggregateId(),
+                command.getTimeStamp(),
+                command.getUserId(),
+                command.getVersion()
         ));
     }
 }
