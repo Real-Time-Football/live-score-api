@@ -1,7 +1,5 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.events.GoalScoredEvent;
-import com.sports.livescoreapi.events.MatchStartedEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,36 +8,27 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 public class MatchAggregate extends Aggregate {
 
-    private final EventBus eventBus;
-    private MatchState matchState;
+    private boolean teamsArePlaying;
     private int homeScore;
     private int visitorsScore;
 
-    public MatchAggregate(EventBus eventBus) {
-        this.eventBus = eventBus;
-        matchState = MatchState.NOT_STARTED;
+    public MatchAggregate(String matchId) {
+        super(matchId);
     }
 
-    @HandleStarterCommand
-    public void on(MatchStartedEvent event) {
-        // Set the ID of the saga
-        this.setAggregateId(event.getAggregateId());
-        matchState = MatchState.STARTED;
+    public void start() {
+        teamsArePlaying = true;
     }
 
-    @HandleCommand
-    public void on(GoalScoredEvent event) {
-        if(matchState != MatchState.STARTED) {
-            return;
+    public void scoreForHome() {
+        if (teamsArePlaying) {
+            homeScore += 1;
         }
+    }
 
-        switch (event.getTeamSide()) {
-            case HOME:
-                homeScore += 1;
-                break;
-            case  VISITORS:
-                visitorsScore += 1;
-                break;
+    public void scoreForVisitors() {
+        if (teamsArePlaying) {
+            visitorsScore += 1;
         }
     }
 }

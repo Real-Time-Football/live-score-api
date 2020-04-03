@@ -13,6 +13,7 @@ import lombok.Setter;
 public class MatchCommandHandler extends CommandHandler {
 
     private final EventBus eventBus;
+    private MatchAggregate match;
 
     public MatchCommandHandler(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -20,7 +21,12 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleStarterCommand
     public void handle(StartMatchCommand command) {
+
         this.setAggregateId(command.getAggregateId());
+
+        match = new MatchAggregate(this.getAggregateId());
+
+        match.start();
 
         eventBus.post(new MatchStartedEvent(
                 command.getAggregateId(),
@@ -32,6 +38,20 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(ScoreCommand command) {
+
+        if (match == null) {
+            return;
+        }
+
+        switch (command.getTeamSide()) {
+            case HOME:
+                match.scoreForHome();
+                break;
+            case  VISITORS:
+                match.scoreForVisitors();
+                break;
+        }
+
         eventBus.post(new GoalScoredEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),

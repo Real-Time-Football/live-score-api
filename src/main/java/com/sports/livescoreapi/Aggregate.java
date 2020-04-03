@@ -8,4 +8,8 @@ public abstract class Aggregate {
     @Getter
     @Setter(AccessLevel.PROTECTED)
     private String aggregateId;
+
+    public Aggregate(String aggregateId) {
+        this.aggregateId = aggregateId;
+    }
 }
