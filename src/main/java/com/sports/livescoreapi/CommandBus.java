@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommandBus {
@@ -26,7 +23,7 @@ public class CommandBus {
     private final Map<Class<?>, Class<?>> commandHandlerStarters = new HashMap<>();
 
     @Getter
-    private final Map<String, Object> commandHandlerInstances = new HashMap<>();
+    private final Map<UUID, Object> commandHandlerInstances = new HashMap<>();
 
     public void registerCommandHandlerStarter(Class<?> startEvent, Class<?> event)
     {

@@ -6,7 +6,7 @@ import java.util.UUID;
 public class StartMatchCommand extends Command {
 
     public StartMatchCommand(String userId, String version) {
-        super(UUID.randomUUID().toString(), LocalDateTime.now(), userId, version);
+        super(UUID.randomUUID(), LocalDateTime.now(), userId, version);
     }
 
 }

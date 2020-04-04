@@ -28,7 +28,7 @@ class EventBusTest {
     void persist_events() {
         EventBus eventBus = new EventBus(eventStore);
 
-        MatchStartedEvent startedEvent = new MatchStartedEvent(UUID.randomUUID().toString(), LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
+        MatchStartedEvent startedEvent = new MatchStartedEvent(UUID.randomUUID(), LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
         eventBus.post(startedEvent);
 
         verify(eventStore, times(1)).save(any(MatchStartedEvent.class));

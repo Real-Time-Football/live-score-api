@@ -16,7 +16,7 @@ class MatchAggregateTest {
 
     @Test
     void starts_match() {
-        String matchId = UUID.randomUUID().toString();
+        UUID matchId = UUID.randomUUID();
 
         MatchAggregate matchAggregate = new MatchAggregate(matchId);
 
@@ -29,7 +29,7 @@ class MatchAggregateTest {
 
     @Test
     void scores_goals() {
-        String matchId = UUID.randomUUID().toString();
+        UUID matchId = UUID.randomUUID();
         MatchAggregate matchAggregate = new MatchAggregate(matchId);
 
         matchAggregate.start();
@@ -42,7 +42,7 @@ class MatchAggregateTest {
 
     @Test
     void do_not_scores_goal_when_match_is_not_started() {
-        String matchId = UUID.randomUUID().toString();
+        UUID matchId = UUID.randomUUID();
         MatchAggregate matchAggregate = new MatchAggregate(matchId);
 
         matchAggregate.scoreForHome();
@@ -54,7 +54,7 @@ class MatchAggregateTest {
 
     @Test
     void ends_match() {
-        String matchId = UUID.randomUUID().toString();
+        UUID matchId = UUID.randomUUID();
         MatchAggregate matchAggregate = new MatchAggregate(matchId);
 
         matchAggregate.start();

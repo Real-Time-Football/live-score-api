@@ -1,12 +1,14 @@
 package com.sports.livescoreapi;
 
+import java.util.UUID;
+
 public class MatchAggregate extends Aggregate {
 
     private boolean teamsArePlaying;
     private int homeScore;
     private int visitorsScore;
 
-    public MatchAggregate(String matchId) {
+    public MatchAggregate(UUID matchId) {
         super(matchId);
     }
 
