@@ -1,5 +1,7 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.commands.EndMatchCommand;
+import com.sports.livescoreapi.commands.ScoreCommand;
 import com.sports.livescoreapi.commands.StartMatchCommand;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +21,10 @@ public class MatchController {
     }
 
     @PostMapping("/match/start")
-    public ResponseEntity startMatch(@Valid @RequestBody StartMatchInfo startMatchInfo) {
+    public ResponseEntity startMatch(@Valid @RequestBody StartMatchCommand startMatchCommand) {
 
         //todo get userId from request
-        String userId = "1";
         //todo get version from request
-        String version = "1";
-
-        StartMatchCommand startMatchCommand = new StartMatchCommand(userId, version);
 
         try {
             commandBus.send(startMatchCommand);
@@ -37,13 +35,26 @@ public class MatchController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PostMapping("/match/{id}/score/{team}")
-    public ResponseEntity<MatchAggregate> score() {
-        return null;
+    @PostMapping("/match/score")
+    public ResponseEntity score(@Valid @RequestBody ScoreCommand scoreCommand) {
+
+        try {
+            commandBus.send(scoreCommand);
+        } catch (ReflectiveOperationException e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PostMapping("/match/{id}/end")
-    public ResponseEntity<MatchAggregate> endMatch() {
-        return null;
+    @PostMapping("/match/end")
+    public ResponseEntity<MatchAggregate> endMatch(@Valid @RequestBody EndMatchCommand endMatchCommand) {
+        try {
+            commandBus.send(endMatchCommand);
+        } catch (ReflectiveOperationException e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
