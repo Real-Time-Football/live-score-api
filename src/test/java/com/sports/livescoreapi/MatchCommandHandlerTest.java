@@ -19,7 +19,7 @@ class MatchCommandHandlerTest {
     private final String DEFAULT_VERSION = "1";
 
     @Test
-    void handleStartMatch() {
+    void handle_start_match() {
         EventBus eventBus = mock(EventBus.class);
         MatchCommandHandler matchCommandHandler = new MatchCommandHandler(eventBus);
 
@@ -31,7 +31,7 @@ class MatchCommandHandlerTest {
     }
 
     @Test
-    void handleScoreGoal() {
+    void handle_score_goal() {
         EventBus eventBus = mock(EventBus.class);
         MatchCommandHandler matchCommandHandler = new MatchCommandHandler(eventBus);
 
@@ -50,7 +50,7 @@ class MatchCommandHandlerTest {
     }
 
     @Test
-    void handleEndMatch() {
+    void handle_end_match() {
         EventBus eventBus = mock(EventBus.class);
         MatchCommandHandler matchCommandHandler = new MatchCommandHandler(eventBus);
 
