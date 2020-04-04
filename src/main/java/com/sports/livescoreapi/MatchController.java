@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @Controller
 public class MatchController {
@@ -21,7 +22,7 @@ public class MatchController {
     }
 
     @PostMapping("/match/start")
-    public ResponseEntity startMatch(@Valid @RequestBody StartMatchCommand startMatchCommand) {
+    public ResponseEntity<UUID> startMatch(@Valid @RequestBody StartMatchCommand startMatchCommand) {
 
         //todo get userId from request
         //todo get version from request
@@ -32,7 +33,7 @@ public class MatchController {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(startMatchCommand.getAggregateId());
     }
 
     @PostMapping("/match/score")
