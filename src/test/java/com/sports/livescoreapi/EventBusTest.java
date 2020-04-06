@@ -21,7 +21,7 @@ class EventBusTest {
     @BeforeEach
     void setUp() {
         eventStore = mock(EventRepository.class);
-        doNothing().when(eventStore).save(any(Event.class));
+        when(eventStore.save(any(Event.class))).thenReturn(null);
     }
 
     @Test

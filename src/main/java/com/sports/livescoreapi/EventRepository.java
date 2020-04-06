@@ -1,7 +1,8 @@
 package com.sports.livescoreapi;
 
 import com.sports.livescoreapi.events.Event;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EventRepository {
-    void save(Event message);
-}
+@Repository
+public interface EventRepository extends MongoRepository<Event, String> { }
