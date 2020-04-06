@@ -28,14 +28,16 @@ public class MatchCommandHandler extends CommandHandler {
 
         match = new MatchAggregate(this.getAggregateId());
 
-        match.start();
-
-        eventBus.post(new MatchStartedEvent(
+        MatchStartedEvent event = new MatchStartedEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion()
-        ));
+        );
+
+        match.apply(event);
+
+        eventBus.post(event);
     }
 
     @HandleCommand
@@ -43,24 +45,20 @@ public class MatchCommandHandler extends CommandHandler {
 
         if (match == null) {
             return;
+            //todo apply validation and raise exception event
         }
 
-        switch (command.getTeamSide()) {
-            case HOME:
-                match.scoreForHome();
-                break;
-            case  VISITORS:
-                match.scoreForVisitors();
-                break;
-        }
-
-        eventBus.post(new GoalScoredEvent(
+        GoalScoredEvent event = new GoalScoredEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion(),
                 command.getTeamSide()
-        ));
+        );
+
+        match.apply(event);
+
+        eventBus.post(event);
     }
 
     @HandleCommand
@@ -70,13 +68,15 @@ public class MatchCommandHandler extends CommandHandler {
             return;
         }
 
-        match.end();
-
-        eventBus.post(new MatchEndedEvent(
+        MatchEndedEvent event = new MatchEndedEvent(
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
                 command.getVersion()
-        ));
+        );
+
+        match.apply(event);
+
+        eventBus.post(event);
     }
 }
