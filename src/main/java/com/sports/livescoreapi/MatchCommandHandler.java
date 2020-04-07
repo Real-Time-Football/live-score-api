@@ -15,7 +15,7 @@ import lombok.Setter;
 public class MatchCommandHandler extends CommandHandler {
 
     private final EventBus eventBus;
-    private MatchAggregate match;
+    private Match match;
 
     public MatchCommandHandler(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -26,7 +26,7 @@ public class MatchCommandHandler extends CommandHandler {
 
         this.setAggregateId(command.getAggregateId());
 
-        match = new MatchAggregate(this.getAggregateId());
+        match = new Match(this.getAggregateId());
 
         MatchStartedEvent event = new MatchStartedEvent(
                 command.getAggregateId(),

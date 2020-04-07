@@ -5,6 +5,7 @@ import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -18,32 +19,63 @@ public class QueryHandler {
         this.eventRepository = eventRepository;
     }
 
-    public Optional<MatchAggregate> getMatch(UUID matchId) {
+    public Optional<Match> getMatch(UUID matchId) {
 
         List<Event> eventStream = eventRepository.findByAggregateId(matchId);
 
         if (eventStream.isEmpty())
             return Optional.empty();
 
-        MatchAggregate matchAggregate = new MatchAggregate(matchId);
+        Match match = new Match(matchId);
 
         eventStream
                 .stream()
                 .sorted(Comparator.comparing(Event::getTimeStamp))
                 .forEach(event -> {
                     if (event.getClass().isAssignableFrom(MatchStartedEvent.class)) {
-                        matchAggregate.apply((MatchStartedEvent) event);
+                        match.apply((MatchStartedEvent) event);
                     }
 
                     if (event.getClass().isAssignableFrom(GoalScoredEvent.class)) {
-                        matchAggregate.apply((GoalScoredEvent) event);
+                        match.apply((GoalScoredEvent) event);
                     }
 
                     if (event.getClass().isAssignableFrom(MatchEndedEvent.class)) {
-                        matchAggregate.apply((MatchEndedEvent) event);
+                        match.apply((MatchEndedEvent) event);
                     }
                 });
 
-        return Optional.of(matchAggregate);
+        return Optional.of(match);
+    }
+
+    public Optional<Match> getMatchAtMinute(UUID matchId, int minute) {
+        List<Event> eventStream = eventRepository.findByAggregateId(matchId);
+
+        if (eventStream.isEmpty())
+            return Optional.empty();
+
+        Match match = new Match(matchId);
+
+        LocalDateTime timeStampAtMinute = eventStream.get(0).getTimeStamp().plusMinutes(minute);
+
+        eventStream
+                .stream()
+                .sorted(Comparator.comparing(Event::getTimeStamp))
+                .filter(event -> event.getTimeStamp().compareTo(timeStampAtMinute) <= 0)
+                .forEach(event -> {
+                    if (event.getClass().isAssignableFrom(MatchStartedEvent.class)) {
+                        match.apply((MatchStartedEvent) event);
+                    }
+
+                    if (event.getClass().isAssignableFrom(GoalScoredEvent.class)) {
+                        match.apply((GoalScoredEvent) event);
+                    }
+
+                    if (event.getClass().isAssignableFrom(MatchEndedEvent.class)) {
+                        match.apply((MatchEndedEvent) event);
+                    }
+                });
+
+        return Optional.of(match);
     }
 }

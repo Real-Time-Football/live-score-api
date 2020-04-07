@@ -49,7 +49,7 @@ public class MatchController {
     }
 
     @PostMapping("/match/end")
-    public ResponseEntity<MatchAggregate> endMatch(@Valid @RequestBody EndMatchCommand endMatchCommand) {
+    public ResponseEntity<Match> endMatch(@Valid @RequestBody EndMatchCommand endMatchCommand) {
         try {
             commandBus.send(endMatchCommand);
         } catch (ReflectiveOperationException e) {

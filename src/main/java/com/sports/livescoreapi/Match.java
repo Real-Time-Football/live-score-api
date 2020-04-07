@@ -6,13 +6,13 @@ import com.sports.livescoreapi.events.MatchStartedEvent;
 
 import java.util.UUID;
 
-public class MatchAggregate extends Aggregate {
+public class Match extends Aggregate {
 
     private boolean teamsArePlaying;
     private int homeScore;
     private int visitorsScore;
 
-    public MatchAggregate(UUID matchId) {
+    public Match(UUID matchId) {
         super(matchId);
     }
 
