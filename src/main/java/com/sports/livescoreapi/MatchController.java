@@ -6,19 +6,24 @@ import com.sports.livescoreapi.commands.StartMatchCommand;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class MatchController {
 
     private CommandBus commandBus;
+    private QueryHandler queryHandler;
 
-    public MatchController(CommandBus commandBus) {
+    public MatchController(CommandBus commandBus, QueryHandler queryHandler) {
         this.commandBus = commandBus;
+        this.queryHandler = queryHandler;
     }
 
     @PostMapping("/match/start")
@@ -49,7 +54,7 @@ public class MatchController {
     }
 
     @PostMapping("/match/end")
-    public ResponseEntity<Match> endMatch(@Valid @RequestBody EndMatchCommand endMatchCommand) {
+    public ResponseEntity endMatch(@Valid @RequestBody EndMatchCommand endMatchCommand) {
         try {
             commandBus.send(endMatchCommand);
         } catch (ReflectiveOperationException e) {
@@ -57,5 +62,16 @@ public class MatchController {
         }
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/match/{aggregateId}")
+    public ResponseEntity<Match> endMatch(@PathVariable UUID aggregateId) {
+        Optional<Match> match = queryHandler.getMatch(aggregateId);
+
+        if (match.isPresent()) {
+            return ResponseEntity.ok(match.get());
+        }
+
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

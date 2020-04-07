@@ -12,8 +12,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +31,9 @@ class MatchControllerTest {
 
     @MockBean
     private CommandBus commandBus;
+
+    @MockBean
+    private QueryHandler queryHandler;
 
     @BeforeEach
     void setUp() {
@@ -64,5 +70,29 @@ class MatchControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(endMatchCommand))
         ).andExpect(status().isOk());
+    }
+
+    @Test
+    void get_match_with_now_state_successfully() throws Exception {
+        UUID aggregateId = UUID.randomUUID();
+
+        when(queryHandler.getMatch(aggregateId)).thenReturn(Optional.of(new Match(aggregateId)));
+
+        mvc.perform(
+                get("/match/" + aggregateId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    void return_not_found_when_match_does_not_exist() throws Exception {
+        UUID aggregateId = UUID.randomUUID();
+
+        when(queryHandler.getMatch(aggregateId)).thenReturn(Optional.empty());
+
+        mvc.perform(
+                get("/match/" + aggregateId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound());
     }
 }
