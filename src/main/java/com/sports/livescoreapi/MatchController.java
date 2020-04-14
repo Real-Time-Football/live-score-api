@@ -3,19 +3,19 @@ package com.sports.livescoreapi;
 import com.sports.livescoreapi.commands.EndMatchCommand;
 import com.sports.livescoreapi.commands.ScoreCommand;
 import com.sports.livescoreapi.commands.StartMatchCommand;
+import com.sports.livescoreapi.events.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:8081")
 public class MatchController {
 
     private CommandBus commandBus;
@@ -65,11 +65,22 @@ public class MatchController {
     }
 
     @GetMapping("/match/{aggregateId}")
-    public ResponseEntity<Match> endMatch(@PathVariable UUID aggregateId) {
+    public ResponseEntity<Match> getMatch(@PathVariable UUID aggregateId) {
         Optional<Match> match = queryHandler.getMatch(aggregateId);
 
         if (match.isPresent()) {
             return ResponseEntity.ok(match.get());
+        }
+
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/match/{aggregateId}/events")
+    public ResponseEntity<List<Event>> getEvents(@PathVariable UUID aggregateId) {
+        Optional<List<Event>> events = queryHandler.getMatchEvents(aggregateId);
+
+        if (events.isPresent()) {
+            return ResponseEntity.ok(events.get());
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);

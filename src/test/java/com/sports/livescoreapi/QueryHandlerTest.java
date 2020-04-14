@@ -1,5 +1,6 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -80,6 +82,45 @@ class QueryHandlerTest {
 
         assertThat(match.isPresent()).isTrue();
         assertThat(match.get()).extracting("homeScore", "visitorsScore", "teamsArePlaying").containsExactly(2, 0, true);
+    }
+
+    @Test
+    void get_all_events() {
+        EventRepository eventRepository = mock(EventRepository.class);
+
+        UUID aggregateId = UUID.randomUUID();
+
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1");
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), "usr-m", "1", TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), "usr-m", "1");
+
+        when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
+                Arrays.asList(
+                        matchStartedEvent,
+                        goalScoredEvent1,
+                        goalScoredEvent2,
+                        goalScoredEvent3,
+                        goalScoredEvent4,
+                        matchEndedEvent
+                )
+        );
+
+        QueryHandler queryHandler = new QueryHandler(eventRepository);
+
+        Optional<List<Event>> events = queryHandler.getMatchEvents(aggregateId);
+
+        assertThat(events.isPresent()).isTrue();
+        assertThat(events.get()).contains(
+                matchStartedEvent,
+                goalScoredEvent1,
+                goalScoredEvent2,
+                goalScoredEvent3,
+                goalScoredEvent4,
+                matchEndedEvent
+        );
     }
 
     LocalDateTime aMatchTime(int hour, int min) {

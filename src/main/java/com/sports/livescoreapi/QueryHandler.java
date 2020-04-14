@@ -80,4 +80,14 @@ public class QueryHandler {
 
         return Optional.of(match);
     }
+
+    public Optional<List<Event>> getMatchEvents(UUID matchId) {
+
+        List<Event> eventStream = eventRepository.findByAggregateId(matchId);
+
+        if (eventStream.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(eventStream);
+    }
 }
