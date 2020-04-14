@@ -40,7 +40,7 @@ class MatchControllerTest {
     private CommandBus commandBus;
 
     @MockBean
-    private QueryHandler queryHandler;
+    private MatchQueryHandler matchQueryHandler;
 
     @BeforeEach
     void setUp() {
@@ -83,7 +83,7 @@ class MatchControllerTest {
     void get_match_with_current_state_successfully() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        when(queryHandler.getMatch(aggregateId)).thenReturn(Optional.of(new Match(aggregateId)));
+        when(matchQueryHandler.getMatch(aggregateId)).thenReturn(Optional.of(new Match(aggregateId)));
 
         mvc.perform(
                 get("/match/" + aggregateId.toString())
@@ -95,7 +95,7 @@ class MatchControllerTest {
     void return_not_found_when_match_does_not_exist() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        when(queryHandler.getMatch(aggregateId)).thenReturn(Optional.empty());
+        when(matchQueryHandler.getMatch(aggregateId)).thenReturn(Optional.empty());
 
         mvc.perform(
                 get("/match/" + aggregateId.toString())
@@ -114,7 +114,7 @@ class MatchControllerTest {
         GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), "usr-m", "1", TeamSide.VISITORS);
         MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), "usr-m", "1");
 
-        when(queryHandler.getMatchEvents(aggregateId)).thenReturn(Optional.of(Arrays.asList(
+        when(matchQueryHandler.getMatchEvents(aggregateId)).thenReturn(Optional.of(Arrays.asList(
                 matchStartedEvent,
                 goalScoredEvent1,
                 goalScoredEvent2,

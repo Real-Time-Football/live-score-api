@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class QueryHandler {
+public class MatchQueryHandler {
 
     private EventRepository eventRepository;
 
-    public QueryHandler(EventRepository eventRepository) {
+    public MatchQueryHandler(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 

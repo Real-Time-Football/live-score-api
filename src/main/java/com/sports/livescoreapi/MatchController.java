@@ -19,11 +19,11 @@ import java.util.UUID;
 public class MatchController {
 
     private CommandBus commandBus;
-    private QueryHandler queryHandler;
+    private MatchQueryHandler matchQueryHandler;
 
-    public MatchController(CommandBus commandBus, QueryHandler queryHandler) {
+    public MatchController(CommandBus commandBus, MatchQueryHandler matchQueryHandler) {
         this.commandBus = commandBus;
-        this.queryHandler = queryHandler;
+        this.matchQueryHandler = matchQueryHandler;
     }
 
     @PostMapping("/match/start")
@@ -66,7 +66,7 @@ public class MatchController {
 
     @GetMapping("/match/{aggregateId}")
     public ResponseEntity<Match> getMatch(@PathVariable UUID aggregateId) {
-        Optional<Match> match = queryHandler.getMatch(aggregateId);
+        Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         if (match.isPresent()) {
             return ResponseEntity.ok(match.get());
@@ -77,7 +77,7 @@ public class MatchController {
 
     @GetMapping("/match/{aggregateId}/events")
     public ResponseEntity<List<Event>> getEvents(@PathVariable UUID aggregateId) {
-        Optional<List<Event>> events = queryHandler.getMatchEvents(aggregateId);
+        Optional<List<Event>> events = matchQueryHandler.getMatchEvents(aggregateId);
 
         if (events.isPresent()) {
             return ResponseEntity.ok(events.get());

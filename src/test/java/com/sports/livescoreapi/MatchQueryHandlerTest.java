@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class QueryHandlerTest {
+class MatchQueryHandlerTest {
 
     @Test
     void get_match_with_last_state() {
@@ -44,9 +44,9 @@ class QueryHandlerTest {
                 )
         );
 
-        QueryHandler queryHandler = new QueryHandler(eventRepository);
+        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventRepository);
 
-        Optional<Match> match = queryHandler.getMatch(aggregateId);
+        Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
         assertThat(match.get()).extracting("homeScore", "visitorsScore", "teamsArePlaying").containsExactly(3, 1, false);
@@ -76,9 +76,9 @@ class QueryHandlerTest {
                 )
         );
 
-        QueryHandler queryHandler = new QueryHandler(eventRepository);
+        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventRepository);
 
-        Optional<Match> match = queryHandler.getMatchAtMinute(aggregateId, 30);
+        Optional<Match> match = matchQueryHandler.getMatchAtMinute(aggregateId, 30);
 
         assertThat(match.isPresent()).isTrue();
         assertThat(match.get()).extracting("homeScore", "visitorsScore", "teamsArePlaying").containsExactly(2, 0, true);
@@ -108,9 +108,9 @@ class QueryHandlerTest {
                 )
         );
 
-        QueryHandler queryHandler = new QueryHandler(eventRepository);
+        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventRepository);
 
-        Optional<List<Event>> events = queryHandler.getMatchEvents(aggregateId);
+        Optional<List<Event>> events = matchQueryHandler.getMatchEvents(aggregateId);
 
         assertThat(events.isPresent()).isTrue();
         assertThat(events.get()).contains(
