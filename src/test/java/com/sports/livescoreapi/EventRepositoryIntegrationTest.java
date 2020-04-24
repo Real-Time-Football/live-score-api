@@ -26,12 +26,18 @@ public class EventRepositoryIntegrationTest {
         eventRepository.deleteAll();
     }
 
+    private final String USER_ID = "user_x";
+    private final String VERSION = "1";
+    private final LocalDateTime DATE = LocalDateTime.now();
+    private final String HOME = "PALMEIRAS";
+    private final String VISITORS = "CORINTHIANS";
+
     @Test
     void save_events() {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
 
         eventRepository.save(matchStartedEvent);
 
@@ -43,9 +49,9 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
-        GoalScoredEvent goalScoredEvent = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
+        GoalScoredEvent goalScoredEvent = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
 
         eventRepository.save(matchStartedEvent);
         eventRepository.save(goalScoredEvent);

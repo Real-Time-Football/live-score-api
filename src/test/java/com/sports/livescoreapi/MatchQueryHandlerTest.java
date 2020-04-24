@@ -20,14 +20,20 @@ import static org.mockito.Mockito.when;
 
 class MatchQueryHandlerTest {
 
+    private final String USER_ID = "user_x";
+    private final String VERSION = "1";
+    private final LocalDateTime DATE = LocalDateTime.now();
+    private final String HOME = "PALMEIRAS";
+    private final String VISITORS = "CORINTHIANS";
+
     @Test
     void get_match_with_teams_configured() {
         EventRepository eventRepository = mock(EventRepository.class);
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1",
-                LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION,
+                DATE, HOME, VISITORS);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
@@ -50,12 +56,12 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
@@ -82,12 +88,12 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), "usr-m", "1", TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, HOME, VISITORS);
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
@@ -114,12 +120,12 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), "usr-m", "1", TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, HOME, VISITORS);
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
