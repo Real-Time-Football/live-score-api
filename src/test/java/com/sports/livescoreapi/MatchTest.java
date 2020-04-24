@@ -23,7 +23,7 @@ class MatchTest {
         match.start();
 
         assertThat(match)
-                .extracting("aggregateId", "teamsArePlaying")
+                .extracting("aggregateId", "playing")
                 .contains(matchId, true);
     }
 
@@ -36,8 +36,8 @@ class MatchTest {
         match.scoreForHome();
         match.scoreForVisitors();
 
-        assertThat(match.getHomeScore()).isEqualTo(1);
-        assertThat(match.getVisitorsScore()).isEqualTo(1);
+        assertThat(match.getScore().getHome()).isEqualTo(1);
+        assertThat(match.getScore().getVisitors()).isEqualTo(1);
     }
 
     @Test
@@ -48,8 +48,8 @@ class MatchTest {
         match.scoreForHome();
         match.scoreForVisitors();
 
-        assertThat(match.getHomeScore()).isEqualTo(0);
-        assertThat(match.getVisitorsScore()).isEqualTo(0);
+        assertThat(match.getScore().getHome()).isEqualTo(0);
+        assertThat(match.getScore().getVisitors()).isEqualTo(0);
     }
 
     @Test
@@ -60,6 +60,6 @@ class MatchTest {
         match.start();
         match.end();
 
-        assertFalse(match.areTeamsPlaying());
+        assertFalse(match.isPlaying());
     }
 }

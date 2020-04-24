@@ -15,8 +15,8 @@ class EventBusTest {
 
     private EventRepository eventStore;
 
-    private final String DEFAULT_USER_ID = "user_x";
-    private final String DEFAULT_VERSION = "1";
+    private final String USER_ID = "user_x";
+    private final String VERSION = "1";
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,9 @@ class EventBusTest {
     void persist_events() {
         EventBus eventBus = new EventBus(eventStore);
 
-        MatchStartedEvent startedEvent = new MatchStartedEvent(UUID.randomUUID(), LocalDateTime.now(), DEFAULT_USER_ID, DEFAULT_VERSION);
+        MatchStartedEvent startedEvent = new MatchStartedEvent(UUID.randomUUID(), LocalDateTime.now(), USER_ID, VERSION,
+                LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
+
         eventBus.post(startedEvent);
 
         verify(eventStore, times(1)).save(any(MatchStartedEvent.class));

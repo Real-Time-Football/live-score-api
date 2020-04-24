@@ -48,7 +48,7 @@ class MatchControllerTest {
 
     @Test
     void start_match_successfully() throws Exception {
-        StartMatchCommand startMatchCommand = new StartMatchCommand("user-m", "1");
+        StartMatchCommand startMatchCommand = new StartMatchCommand("user-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
 
         mvc.perform(
                 post("/match/start")
@@ -107,7 +107,7 @@ class MatchControllerTest {
     void get_events_of_match_successfully() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);

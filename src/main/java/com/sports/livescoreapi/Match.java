@@ -3,52 +3,49 @@ package com.sports.livescoreapi;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
+import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
 public class Match extends Aggregate {
 
-    private boolean teamsArePlaying;
-    private int homeScore;
-    private int visitorsScore;
+    private boolean playing;
+    private LocalDateTime date;
+    private Team home;
+    private Team visitors;
+    private Score score;
 
     public Match(UUID matchId) {
         super(matchId);
-    }
-
-    public boolean areTeamsPlaying() {
-        return teamsArePlaying;
-    }
-
-    public int getHomeScore() {
-        return homeScore;
-    }
-
-    public int getVisitorsScore() {
-        return visitorsScore;
+        score = new Score();
     }
 
     public void start() {
-        teamsArePlaying = true;
+        playing = true;
     }
 
     public void scoreForHome() {
-        if (teamsArePlaying) {
-            homeScore += 1;
+        if (playing) {
+            score.incrementHome();
         }
     }
 
     public void scoreForVisitors() {
-        if (teamsArePlaying) {
-            visitorsScore += 1;
+        if (playing) {
+            score.incrementVisitors();
         }
     }
 
     public void end() {
-        teamsArePlaying = false;
+        playing = false;
     }
 
     public void apply(MatchStartedEvent matchStartedEvent) {
+        this.date = matchStartedEvent.getDate();
+        this.home = Team.of(matchStartedEvent.getTeamHome());
+        this.visitors = Team.of(matchStartedEvent.getTeamVisitors());
         start();
     }
 

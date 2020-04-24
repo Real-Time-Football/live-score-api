@@ -6,13 +6,17 @@ import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CommandBusTest {
 
-    private final String DEFAULT_USER_ID = "user_x";
-    private final String DEFAULT_VERSION = "1";
+    private final String USER_ID = "user_x";
+    private final String VERSION = "1";
+    private final String HOME = "PALMEIRAS";
+    private final String VISITORS = "CORINTHIANS";
 
     @Test
     void register_command_handler_starter() {
@@ -29,7 +33,7 @@ class CommandBusTest {
         CommandBus commandBus = new CommandBus(eventBus);
         commandBus.registerCommandHandlerStarter(StartMatchCommand.class, MatchCommandHandler.class);
 
-        StartMatchCommand startCommand = new StartMatchCommand(DEFAULT_USER_ID, DEFAULT_VERSION);
+        StartMatchCommand startCommand = new StartMatchCommand(USER_ID, VERSION, LocalDateTime.now(), HOME, VISITORS);
         commandBus.send(startCommand);
 
         assertEquals(1, commandBus.getCommandHandlerInstances().size());
@@ -41,10 +45,10 @@ class CommandBusTest {
         CommandBus commandBus = new CommandBus(eventBus);
         commandBus.registerCommandHandlerStarter(StartMatchCommand.class, MatchCommandHandler.class);
 
-        StartMatchCommand startCommand = new StartMatchCommand(DEFAULT_USER_ID, DEFAULT_VERSION);
+        StartMatchCommand startCommand = new StartMatchCommand(USER_ID, VERSION, LocalDateTime.now(), HOME, VISITORS);
         commandBus.send(startCommand);
 
-        ScoreCommand scoreCommand = new ScoreCommand(startCommand.getAggregateId(), DEFAULT_USER_ID, DEFAULT_VERSION, TeamSide.HOME);
+        ScoreCommand scoreCommand = new ScoreCommand(startCommand.getAggregateId(), USER_ID, VERSION, TeamSide.HOME);
         commandBus.send(scoreCommand);
 
         verify(eventBus, times(1)).post(any(MatchStartedEvent.class));

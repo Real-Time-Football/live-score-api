@@ -21,12 +21,36 @@ import static org.mockito.Mockito.when;
 class MatchQueryHandlerTest {
 
     @Test
+    void get_match_with_teams_configured() {
+        EventRepository eventRepository = mock(EventRepository.class);
+
+        UUID aggregateId = UUID.randomUUID();
+
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1",
+                LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
+
+        when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
+                Arrays.asList(
+                        matchStartedEvent
+                )
+        );
+
+        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventRepository);
+
+        Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
+
+        assertThat(match.isPresent()).isTrue();
+        assertThat(match.get()).extracting("home", "visitors")
+                .containsExactly(Team.of("PALMEIRAS"), Team.of("CORINTHIANS"));
+    }
+
+    @Test
     void get_match_with_last_state() {
         EventRepository eventRepository = mock(EventRepository.class);
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
@@ -49,7 +73,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("homeScore", "visitorsScore", "teamsArePlaying").containsExactly(3, 1, false);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(3, 1, false);
     }
 
     @Test
@@ -58,7 +82,7 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);
@@ -81,7 +105,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatchAtMinute(aggregateId, 30);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("homeScore", "visitorsScore", "teamsArePlaying").containsExactly(2, 0, true);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(2, 0, true);
     }
 
     @Test
@@ -90,7 +114,7 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), "usr-m", "1", TeamSide.HOME);
         GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), "usr-m", "1", TeamSide.HOME);

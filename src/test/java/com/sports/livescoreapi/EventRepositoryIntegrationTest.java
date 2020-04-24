@@ -31,7 +31,7 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
 
         eventRepository.save(matchStartedEvent);
 
@@ -43,7 +43,7 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
         GoalScoredEvent goalScoredEvent = new GoalScoredEvent(aggregateId, LocalDateTime.now(), "usr-m", "1", TeamSide.HOME);
         MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), "usr-m", "1");
 

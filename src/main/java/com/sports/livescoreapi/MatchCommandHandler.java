@@ -32,7 +32,10 @@ public class MatchCommandHandler extends CommandHandler {
                 command.getAggregateId(),
                 command.getTimeStamp(),
                 command.getUserId(),
-                command.getVersion()
+                command.getVersion(),
+                command.getDate(),
+                command.getTeamHome(),
+                command.getTeamVisitors()
         );
 
         match.apply(event);
