@@ -14,10 +14,10 @@ public class MatchStartedEvent extends Event {
     private final Team visitors;
 
     public MatchStartedEvent(UUID aggregateId, LocalDateTime timeStamp, String userId, String version,
-                             LocalDateTime date, Team teamHome, Team visitors) {
+                             LocalDateTime date, Team home, Team visitors) {
         super(aggregateId, timeStamp, userId, version);
         this.date = date;
-        this.home = teamHome;
+        this.home = home;
         this.visitors = visitors;
     }
 }
