@@ -23,8 +23,8 @@ class MatchQueryHandlerTest {
     private final String USER_ID = "user_x";
     private final String VERSION = "1";
     private final LocalDateTime DATE = LocalDateTime.now();
-    private final String HOME = "PALMEIRAS";
-    private final String VISITORS = "CORINTHIANS";
+    private final Team HOME = Team.of("PALMEIRAS");
+    private final Team VISITORS = Team.of("CORINTHIANS");
 
     @Test
     void get_match_with_teams_configured() {

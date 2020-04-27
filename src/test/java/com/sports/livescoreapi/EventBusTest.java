@@ -29,7 +29,7 @@ class EventBusTest {
         EventBus eventBus = new EventBus(eventStore);
 
         MatchStartedEvent startedEvent = new MatchStartedEvent(UUID.randomUUID(), LocalDateTime.now(), USER_ID, VERSION,
-                LocalDateTime.now(), "PALMEIRAS", "CORINTHIANS");
+                LocalDateTime.now(), Team.of("PALMEIRAS"), Team.of("CORINTHIANS"));
 
         eventBus.post(startedEvent);
 

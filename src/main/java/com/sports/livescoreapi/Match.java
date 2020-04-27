@@ -44,8 +44,8 @@ public class Match extends Aggregate {
 
     public void apply(MatchStartedEvent matchStartedEvent) {
         this.date = matchStartedEvent.getDate();
-        this.home = Team.of(matchStartedEvent.getTeamHome());
-        this.visitors = Team.of(matchStartedEvent.getTeamVisitors());
+        this.home = matchStartedEvent.getHome();
+        this.visitors = matchStartedEvent.getVisitors();
         start();
     }
 

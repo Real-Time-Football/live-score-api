@@ -108,7 +108,7 @@ class MatchControllerTest {
     void get_events_of_match_successfully() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, HOME, VISITORS);
+        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, Team.of(HOME), Team.of(VISITORS));
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
         GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);

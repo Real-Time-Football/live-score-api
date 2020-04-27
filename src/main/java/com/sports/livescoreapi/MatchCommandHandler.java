@@ -34,8 +34,8 @@ public class MatchCommandHandler extends CommandHandler {
                 command.getUserId(),
                 command.getVersion(),
                 command.getDate(),
-                command.getTeamHome(),
-                command.getTeamVisitors()
+                Team.of(command.getTeamHome()),
+                Team.of(command.getTeamVisitors())
         );
 
         match.apply(event);
