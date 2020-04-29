@@ -4,17 +4,18 @@ import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+import static com.sports.livescoreapi.fixtures.EventFixture.anEventTime;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,9 +23,13 @@ class MatchQueryHandlerTest {
 
     private final String USER_ID = "user_x";
     private final String VERSION = "1";
-    private final LocalDateTime DATE = LocalDateTime.now();
-    private final Team HOME = Team.of("PALMEIRAS");
-    private final Team VISITORS = Team.of("CORINTHIANS");
+
+    private MatchStartedEventBuilder matchStartedEventBuilder;
+
+    @BeforeEach
+    void setUp() {
+        matchStartedEventBuilder = new MatchStartedEventBuilder();
+    }
 
     @Test
     void get_match_with_teams_configured() {
@@ -32,14 +37,13 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION,
-                DATE, HOME, VISITORS);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .withHome("PALMEIRAS")
+                .withVisitors("CORINTHIANS").build();
 
-        when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
-                Arrays.asList(
-                        matchStartedEvent
-                )
-        );
+        when(eventRepository.findByAggregateId(aggregateId))
+                .thenReturn(Collections.singletonList(matchStartedEvent));
 
         MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventRepository);
 
@@ -56,11 +60,12 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId).build();
+
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
         GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.VISITORS);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.VISITORS);
         MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
@@ -69,7 +74,6 @@ class MatchQueryHandlerTest {
                         goalScoredEvent1,
                         goalScoredEvent2,
                         goalScoredEvent3,
-                        goalScoredEvent4,
                         matchEndedEvent
                 )
         );
@@ -79,7 +83,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(3, 1, false);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(2, 1, false);
     }
 
     @Test
@@ -88,12 +92,16 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, HOME, VISITORS);
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), USER_ID, VERSION);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .withTimeStamp(anEventTime(21, 30))
+                .build();
+
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, anEventTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, anEventTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, anEventTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, anEventTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, anEventTime(22, 50), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
@@ -120,12 +128,16 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, HOME, VISITORS);
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), USER_ID, VERSION);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .withTimeStamp(anEventTime(21, 30))
+                .build();
+
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, anEventTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, anEventTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, anEventTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, anEventTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, anEventTime(22, 50), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
@@ -151,9 +163,5 @@ class MatchQueryHandlerTest {
                 goalScoredEvent4,
                 matchEndedEvent
         );
-    }
-
-    LocalDateTime aMatchTime(int hour, int min) {
-        return LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, min));
     }
 }

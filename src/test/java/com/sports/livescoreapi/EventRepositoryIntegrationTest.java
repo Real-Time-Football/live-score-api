@@ -4,6 +4,7 @@ import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +22,25 @@ public class EventRepositoryIntegrationTest {
     @Autowired
     EventRepository eventRepository;
 
+    private MatchStartedEventBuilder matchStartedEventBuilder;
+
     @BeforeEach
     void setUp() {
         eventRepository.deleteAll();
+        matchStartedEventBuilder = new MatchStartedEventBuilder();
     }
 
     private final String USER_ID = "user_x";
     private final String VERSION = "1";
-    private final LocalDateTime DATE = LocalDateTime.now();
-    private final Team HOME = Team.of("PALMEIRAS");
-    private final Team VISITORS = Team.of("CORINTHIANS");
 
     @Test
     void save_events() {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .build();
 
         eventRepository.save(matchStartedEvent);
 
@@ -49,7 +52,10 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, DATE, HOME, VISITORS);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .build();
+
         GoalScoredEvent goalScoredEvent = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
         MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
 

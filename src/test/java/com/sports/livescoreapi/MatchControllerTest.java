@@ -7,6 +7,8 @@ import com.sports.livescoreapi.commands.StartMatchCommand;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,13 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.sports.livescoreapi.fixtures.EventFixture.anEventTime;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +47,13 @@ class MatchControllerTest {
     private final LocalDateTime DATE = LocalDateTime.now();
     private final String HOME = "PALMEIRAS";
     private final String VISITORS = "CORINTHIANS";
+
+    private MatchStartedEventBuilder matchStartedEventBuilder;
+
+    @BeforeEach
+    void setUp() {
+        matchStartedEventBuilder = new MatchStartedEventBuilder();
+    }
 
     @Test
     void start_match_successfully() throws Exception {
@@ -108,12 +116,16 @@ class MatchControllerTest {
     void get_events_of_match_successfully() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = new MatchStartedEvent(aggregateId, aMatchTime(21, 30), USER_ID, VERSION, DATE, Team.of(HOME), Team.of(VISITORS));
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, aMatchTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, aMatchTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, aMatchTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, aMatchTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
-        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, aMatchTime(22, 50), USER_ID, VERSION);
+        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+                .withAggregateId(aggregateId)
+                .withTimeStamp(anEventTime(21, 30))
+                .build();
+
+        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, anEventTime(21, 40), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, anEventTime(21, 45), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, anEventTime(22, 25), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent goalScoredEvent4 = new GoalScoredEvent(aggregateId, anEventTime(22, 40), USER_ID, VERSION, TeamSide.VISITORS);
+        MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, anEventTime(22, 50), USER_ID, VERSION);
 
         when(matchQueryHandler.getMatchEvents(aggregateId)).thenReturn(Optional.of(Arrays.asList(
                 matchStartedEvent,
@@ -128,9 +140,5 @@ class MatchControllerTest {
                 get("/match/" + aggregateId.toString() + "/events")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
-    }
-
-    LocalDateTime aMatchTime(int hour, int min) {
-        return LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, min));
     }
 }
