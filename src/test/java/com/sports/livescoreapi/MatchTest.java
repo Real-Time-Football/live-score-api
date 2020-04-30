@@ -62,4 +62,71 @@ class MatchTest {
 
         assertFalse(match.isPlaying());
     }
+
+    @Test
+    void start_first_period() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
+    }
+
+    @Test
+    void stop_first_period() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.stopPeriod();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
+    }
+
+    @Test
+    void not_stop_period_when_no_period_started() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.stopPeriod();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.NONE);
+    }
+
+    @Test
+    void start_second_period() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.stopPeriod();
+        match.startPeriod();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
+    }
+
+    @Test
+    void not_start_second_period_when_not_at_half_time() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.startPeriod();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
+    }
+
+    @Test
+    void stop_second_period() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.stopPeriod();
+        match.startPeriod();
+        match.stopPeriod();
+
+        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
+    }
 }

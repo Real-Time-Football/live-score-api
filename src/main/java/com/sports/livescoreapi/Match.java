@@ -16,14 +16,17 @@ public class Match extends Aggregate {
     private Team home;
     private Team visitors;
     private Score score;
+    private MatchPeriod period;
 
     public Match(UUID matchId) {
         super(matchId);
         score = new Score();
+        period = MatchPeriod.NONE;
     }
 
     public void start() {
         playing = true;
+        startPeriod();
     }
 
     public void scoreForHome() {
@@ -62,5 +65,21 @@ public class Match extends Aggregate {
 
     public void apply(MatchEndedEvent matchEndedEvent) {
         end();
+    }
+
+    public void startPeriod() {
+        if (period == MatchPeriod.NONE) {
+            period = MatchPeriod.FIRST_PERIOD;
+        } else if (period == MatchPeriod.HALF_TIME) {
+            period = MatchPeriod.SECOND_PERIOD;
+        }
+    }
+
+    public void stopPeriod() {
+        if (period == MatchPeriod.FIRST_PERIOD) {
+            period = MatchPeriod.HALF_TIME;
+        } else if (period == MatchPeriod.SECOND_PERIOD) {
+            period = MatchPeriod.FULL_TIME;
+        }
     }
 }
