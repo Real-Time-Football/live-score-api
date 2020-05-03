@@ -1,8 +1,6 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.commands.EndMatchCommand;
-import com.sports.livescoreapi.commands.ScoreCommand;
-import com.sports.livescoreapi.commands.StartMatchCommand;
+import com.sports.livescoreapi.commands.*;
 import com.sports.livescoreapi.events.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,5 +82,27 @@ public class MatchController {
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/match/start-period")
+    public ResponseEntity startPeriod(@Valid @RequestBody StartPeriodCommand startPeriodCommand) {
+        try {
+            commandBus.send(startPeriodCommand);
+        } catch (ReflectiveOperationException e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/match/end-period")
+    public ResponseEntity endPeriod(@Valid @RequestBody EndPeriodCommand endPeriodCommand) {
+        try {
+            commandBus.send(endPeriodCommand);
+        } catch (ReflectiveOperationException e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

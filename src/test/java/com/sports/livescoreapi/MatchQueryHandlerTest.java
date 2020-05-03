@@ -1,9 +1,6 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.events.Event;
-import com.sports.livescoreapi.events.GoalScoredEvent;
-import com.sports.livescoreapi.events.MatchEndedEvent;
-import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.events.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -52,17 +49,23 @@ class MatchQueryHandlerTest {
         MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId).build();
 
-        GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent2 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
-        GoalScoredEvent goalScoredEvent3 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.VISITORS);
+        GoalScoredEvent homeScored1Event = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        PeriodEndedEvent firstPeriodEndedEvent = new PeriodEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
+        PeriodStartedEvent secondPeriodStartedEvent = new PeriodStartedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
+        GoalScoredEvent homeScored2Event = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
+        GoalScoredEvent visitorsScored1Event = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.VISITORS);
+        PeriodEndedEvent secondPeriodEndedEvent = new PeriodEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
         MatchEndedEvent matchEndedEvent = new MatchEndedEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION);
 
         when(eventRepository.findByAggregateId(aggregateId)).thenReturn(
                 Arrays.asList(
                         matchStartedEvent,
-                        goalScoredEvent1,
-                        goalScoredEvent2,
-                        goalScoredEvent3,
+                        homeScored1Event,
+                        firstPeriodEndedEvent,
+                        secondPeriodStartedEvent,
+                        homeScored2Event,
+                        visitorsScored1Event,
+                        secondPeriodEndedEvent,
                         matchEndedEvent
                 )
         );
@@ -72,7 +75,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(2, 1, false);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "playing", "period").containsExactly(2, 1, false, MatchPeriod.FULL_TIME);
     }
 
     @Test

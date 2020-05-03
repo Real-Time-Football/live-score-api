@@ -1,9 +1,6 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.events.Event;
-import com.sports.livescoreapi.events.GoalScoredEvent;
-import com.sports.livescoreapi.events.MatchEndedEvent;
-import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.events.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,19 +30,7 @@ public class MatchQueryHandler {
         eventStream
                 .stream()
                 .sorted(Comparator.comparing(Event::getTimeStamp))
-                .forEach(event -> {
-                    if (event.getClass().isAssignableFrom(MatchStartedEvent.class)) {
-                        match.apply((MatchStartedEvent) event);
-                    }
-
-                    if (event.getClass().isAssignableFrom(GoalScoredEvent.class)) {
-                        match.apply((GoalScoredEvent) event);
-                    }
-
-                    if (event.getClass().isAssignableFrom(MatchEndedEvent.class)) {
-                        match.apply((MatchEndedEvent) event);
-                    }
-                });
+                .forEach(event -> applyFor(match, event));
 
         return Optional.of(match);
     }
@@ -64,19 +49,7 @@ public class MatchQueryHandler {
                 .stream()
                 .sorted(Comparator.comparing(Event::getTimeStamp))
                 .filter(event -> event.getTimeStamp().compareTo(timeStampAtMinute) <= 0)
-                .forEach(event -> {
-                    if (event.getClass().isAssignableFrom(MatchStartedEvent.class)) {
-                        match.apply((MatchStartedEvent) event);
-                    }
-
-                    if (event.getClass().isAssignableFrom(GoalScoredEvent.class)) {
-                        match.apply((GoalScoredEvent) event);
-                    }
-
-                    if (event.getClass().isAssignableFrom(MatchEndedEvent.class)) {
-                        match.apply((MatchEndedEvent) event);
-                    }
-                });
+                .forEach(event -> applyFor(match, event));
 
         return Optional.of(match);
     }
@@ -89,5 +62,27 @@ public class MatchQueryHandler {
             return Optional.empty();
 
         return Optional.of(eventStream);
+    }
+
+    private void applyFor(Match match, Event event) {
+        if (event.getClass().isAssignableFrom(MatchStartedEvent.class)) {
+            match.apply((MatchStartedEvent) event);
+        }
+
+        if (event.getClass().isAssignableFrom(GoalScoredEvent.class)) {
+            match.apply((GoalScoredEvent) event);
+        }
+
+        if (event.getClass().isAssignableFrom(MatchEndedEvent.class)) {
+            match.apply((MatchEndedEvent) event);
+        }
+
+        if (event.getClass().isAssignableFrom(PeriodStartedEvent.class)) {
+            match.apply((PeriodStartedEvent) event);
+        }
+
+        if (event.getClass().isAssignableFrom(PeriodEndedEvent.class)) {
+            match.apply((PeriodEndedEvent) event);
+        }
     }
 }

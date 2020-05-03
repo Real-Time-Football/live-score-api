@@ -1,9 +1,7 @@
 package com.sports.livescoreapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sports.livescoreapi.commands.EndMatchCommand;
-import com.sports.livescoreapi.commands.ScoreCommand;
-import com.sports.livescoreapi.commands.StartMatchCommand;
+import com.sports.livescoreapi.commands.*;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
@@ -131,6 +129,28 @@ class MatchControllerTest {
         mvc.perform(
                 get("/match/" + aggregateId.toString() + "/events")
                         .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    void start_period_successfully() throws Exception {
+        StartPeriodCommand startPeriodCommand = new StartPeriodCommand(UUID.randomUUID(), USER_ID, VERSION);
+
+        mvc.perform(
+                post("/match/start-period")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(startPeriodCommand))
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    void end_period_successfully() throws Exception {
+        EndPeriodCommand endPeriodCommand = new EndPeriodCommand(UUID.randomUUID(), USER_ID, VERSION);
+
+        mvc.perform(
+                post("/match/end-period")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(endPeriodCommand))
         ).andExpect(status().isOk());
     }
 }
