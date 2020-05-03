@@ -4,7 +4,6 @@ import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
-import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static com.sports.livescoreapi.fixtures.MatchStartedEventFixture.aMatchStartedEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
@@ -22,12 +22,9 @@ public class EventRepositoryIntegrationTest {
     @Autowired
     EventRepository eventRepository;
 
-    private MatchStartedEventBuilder matchStartedEventBuilder;
-
     @BeforeEach
     void setUp() {
         eventRepository.deleteAll();
-        matchStartedEventBuilder = new MatchStartedEventBuilder();
     }
 
     private final String USER_ID = "user_x";
@@ -38,7 +35,7 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .build();
 
@@ -52,7 +49,7 @@ public class EventRepositoryIntegrationTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .build();
 

@@ -7,8 +7,6 @@ import com.sports.livescoreapi.commands.StartMatchCommand;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
-import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.sports.livescoreapi.fixtures.EventFixture.anEventTime;
+import static com.sports.livescoreapi.fixtures.MatchStartedEventFixture.aMatchStartedEvent;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,13 +46,6 @@ class MatchControllerTest {
     private final LocalDateTime DATE = LocalDateTime.now();
     private final String HOME = "PALMEIRAS";
     private final String VISITORS = "CORINTHIANS";
-
-    private MatchStartedEventBuilder matchStartedEventBuilder;
-
-    @BeforeEach
-    void setUp() {
-        matchStartedEventBuilder = new MatchStartedEventBuilder();
-    }
 
     @Test
     void start_match_successfully() throws Exception {
@@ -116,7 +108,7 @@ class MatchControllerTest {
     void get_events_of_match_successfully() throws Exception {
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .withTimeStamp(anEventTime(21, 30))
                 .build();

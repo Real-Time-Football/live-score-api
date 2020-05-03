@@ -4,18 +4,14 @@ import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
-import com.sports.livescoreapi.fixtures.MatchStartedEventBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 import static com.sports.livescoreapi.fixtures.EventFixture.anEventTime;
+import static com.sports.livescoreapi.fixtures.MatchStartedEventFixture.aMatchStartedEvent;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,20 +20,13 @@ class MatchQueryHandlerTest {
     private final String USER_ID = "user_x";
     private final String VERSION = "1";
 
-    private MatchStartedEventBuilder matchStartedEventBuilder;
-
-    @BeforeEach
-    void setUp() {
-        matchStartedEventBuilder = new MatchStartedEventBuilder();
-    }
-
     @Test
     void get_match_with_teams_configured() {
         EventRepository eventRepository = mock(EventRepository.class);
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .withHome("PALMEIRAS")
                 .withVisitors("CORINTHIANS").build();
@@ -60,7 +49,7 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId).build();
 
         GoalScoredEvent goalScoredEvent1 = new GoalScoredEvent(aggregateId, LocalDateTime.now(), USER_ID, VERSION, TeamSide.HOME);
@@ -92,7 +81,7 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .withTimeStamp(anEventTime(21, 30))
                 .build();
@@ -128,7 +117,7 @@ class MatchQueryHandlerTest {
 
         UUID aggregateId = UUID.randomUUID();
 
-        MatchStartedEvent matchStartedEvent = matchStartedEventBuilder
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent()
                 .withAggregateId(aggregateId)
                 .withTimeStamp(anEventTime(21, 30))
                 .build();
