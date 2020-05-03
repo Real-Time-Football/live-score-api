@@ -1,8 +1,6 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.events.GoalScoredEvent;
-import com.sports.livescoreapi.events.MatchEndedEvent;
-import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.events.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -45,6 +43,22 @@ public class Match extends Aggregate {
         playing = false;
     }
 
+    public void startPeriod() {
+        if (period == MatchPeriod.NONE) {
+            period = MatchPeriod.FIRST_PERIOD;
+        } else if (period == MatchPeriod.HALF_TIME) {
+            period = MatchPeriod.SECOND_PERIOD;
+        }
+    }
+
+    public void endPeriod() {
+        if (period == MatchPeriod.FIRST_PERIOD) {
+            period = MatchPeriod.HALF_TIME;
+        } else if (period == MatchPeriod.SECOND_PERIOD) {
+            period = MatchPeriod.FULL_TIME;
+        }
+    }
+
     public void apply(MatchStartedEvent matchStartedEvent) {
         this.date = matchStartedEvent.getDate();
         this.home = matchStartedEvent.getHome();
@@ -67,19 +81,11 @@ public class Match extends Aggregate {
         end();
     }
 
-    public void startPeriod() {
-        if (period == MatchPeriod.NONE) {
-            period = MatchPeriod.FIRST_PERIOD;
-        } else if (period == MatchPeriod.HALF_TIME) {
-            period = MatchPeriod.SECOND_PERIOD;
-        }
+    public void apply(PeriodEndedEvent periodEndedEvent) {
+        endPeriod();
     }
 
-    public void stopPeriod() {
-        if (period == MatchPeriod.FIRST_PERIOD) {
-            period = MatchPeriod.HALF_TIME;
-        } else if (period == MatchPeriod.SECOND_PERIOD) {
-            period = MatchPeriod.FULL_TIME;
-        }
+    public void apply(PeriodStartedEvent periodStartedEvent) {
+        startPeriod();
     }
 }

@@ -1,11 +1,7 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.commands.EndMatchCommand;
-import com.sports.livescoreapi.commands.ScoreCommand;
-import com.sports.livescoreapi.commands.StartMatchCommand;
-import com.sports.livescoreapi.events.GoalScoredEvent;
-import com.sports.livescoreapi.events.MatchEndedEvent;
-import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.commands.*;
+import com.sports.livescoreapi.events.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -33,6 +29,7 @@ class MatchCommandHandlerTest {
 
         verify(eventBus).post(any(MatchStartedEvent.class));
         assertTrue(matchCommandHandler.getMatch().isPlaying());
+        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
 
     @Test
@@ -67,5 +64,38 @@ class MatchCommandHandlerTest {
 
         verify(eventBus, times(1)).post(any(MatchEndedEvent.class));
         assertFalse(matchCommandHandler.getMatch().isPlaying());
+    }
+
+    @Test
+    void handle_end_period() {
+        EventBus eventBus = mock(EventBus.class);
+        MatchCommandHandler matchCommandHandler = new MatchCommandHandler(eventBus);
+
+        StartMatchCommand startCommand = new StartMatchCommand(USER_ID, VERSION, DATE, HOME, VISITORS);
+        matchCommandHandler.handle(startCommand);
+
+        EndPeriodCommand endPeriodCommand = new EndPeriodCommand(startCommand.getAggregateId(), USER_ID, VERSION);
+        matchCommandHandler.handle(endPeriodCommand);
+
+        verify(eventBus, times(1)).post(any(PeriodEndedEvent.class));
+        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
+    }
+
+    @Test
+    void handle_start_period() {
+        EventBus eventBus = mock(EventBus.class);
+        MatchCommandHandler matchCommandHandler = new MatchCommandHandler(eventBus);
+
+        StartMatchCommand startCommand = new StartMatchCommand(USER_ID, VERSION, DATE, HOME, VISITORS);
+        matchCommandHandler.handle(startCommand);
+
+        EndPeriodCommand endPeriodCommand = new EndPeriodCommand(startCommand.getAggregateId(), USER_ID, VERSION);
+        matchCommandHandler.handle(endPeriodCommand);
+
+        StartPeriodCommand startPeriodCommand = new StartPeriodCommand(startCommand.getAggregateId(), USER_ID, VERSION);
+        matchCommandHandler.handle(startPeriodCommand);
+
+        verify(eventBus, times(1)).post(any(PeriodStartedEvent.class));
+        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
     }
 }

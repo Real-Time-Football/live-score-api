@@ -79,7 +79,7 @@ class MatchTest {
         Match match = new Match(matchId);
 
         match.start();
-        match.stopPeriod();
+        match.endPeriod();
 
         assertThat(match.getPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
     }
@@ -89,7 +89,7 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.stopPeriod();
+        match.endPeriod();
 
         assertThat(match.getPeriod()).isEqualTo(MatchPeriod.NONE);
     }
@@ -100,7 +100,7 @@ class MatchTest {
         Match match = new Match(matchId);
 
         match.start();
-        match.stopPeriod();
+        match.endPeriod();
         match.startPeriod();
 
         assertThat(match.getPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
@@ -118,14 +118,14 @@ class MatchTest {
     }
 
     @Test
-    void stop_second_period() {
+    void end_second_period() {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
         match.start();
-        match.stopPeriod();
+        match.endPeriod();
         match.startPeriod();
-        match.stopPeriod();
+        match.endPeriod();
 
         assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
     }
