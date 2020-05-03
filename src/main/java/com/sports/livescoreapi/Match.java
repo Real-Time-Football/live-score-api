@@ -44,18 +44,24 @@ public class Match extends Aggregate {
     }
 
     public void startPeriod() {
-        if (period == MatchPeriod.NONE) {
-            period = MatchPeriod.FIRST_PERIOD;
-        } else if (period == MatchPeriod.HALF_TIME) {
-            period = MatchPeriod.SECOND_PERIOD;
+        switch (period) {
+            case NONE:
+                period = MatchPeriod.FIRST_PERIOD;
+                break;
+            case HALF_TIME:
+                period = MatchPeriod.SECOND_PERIOD;
+                break;
         }
     }
 
     public void endPeriod() {
-        if (period == MatchPeriod.FIRST_PERIOD) {
-            period = MatchPeriod.HALF_TIME;
-        } else if (period == MatchPeriod.SECOND_PERIOD) {
-            period = MatchPeriod.FULL_TIME;
+        switch (period) {
+            case FIRST_PERIOD:
+                period = MatchPeriod.HALF_TIME;
+                break;
+            case SECOND_PERIOD:
+                period = MatchPeriod.FULL_TIME;
+                break;
         }
     }
 
