@@ -1,14 +1,12 @@
 package com.sports.livescoreapi;
 
 import com.sports.livescoreapi.commands.*;
-import com.sports.livescoreapi.events.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,17 +66,6 @@ public class MatchController {
 
         if (match.isPresent()) {
             return ResponseEntity.ok(match.get());
-        }
-
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("/match/{aggregateId}/events")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable UUID aggregateId) {
-        Optional<List<Event>> events = matchQueryHandler.getMatchEvents(aggregateId);
-
-        if (events.isPresent()) {
-            return ResponseEntity.ok(events.get());
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
