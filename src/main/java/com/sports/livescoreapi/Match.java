@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Match extends Aggregate {
 
     private boolean ballInPlay;
+    private MatchPlayingStatus status;
     private LocalDateTime date;
     private Team home;
     private Team visitors;
@@ -21,6 +22,7 @@ public class Match extends Aggregate {
 
     public Match(UUID matchId) {
         super(matchId);
+        status = MatchPlayingStatus.PENDING;
         score = new Score();
         currentPeriod = MatchPeriod.NONE;
         firstPeriodScore = Optional.empty();
@@ -29,6 +31,7 @@ public class Match extends Aggregate {
 
     public void start() {
         ballInPlay = true;
+        status = MatchPlayingStatus.PLAYING;
         startPeriod();
     }
 
@@ -46,6 +49,7 @@ public class Match extends Aggregate {
 
     public void end() {
         ballInPlay = false;
+        status = MatchPlayingStatus.ENDED;
     }
 
     public void startPeriod() {

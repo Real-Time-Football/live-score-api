@@ -23,8 +23,8 @@ class MatchTest {
         match.start();
 
         assertThat(match)
-                .extracting("aggregateId", "ballInPlay")
-                .contains(matchId, true);
+                .extracting("aggregateId", "ballInPlay", "status")
+                .contains(matchId, true, MatchPlayingStatus.PLAYING);
     }
 
     @Test
@@ -60,7 +60,9 @@ class MatchTest {
         match.start();
         match.end();
 
-        assertFalse(match.isBallInPlay());
+        assertThat(match)
+                .extracting("ballInPlay", "status")
+                .contains(false, MatchPlayingStatus.ENDED);
     }
 
     @Test
