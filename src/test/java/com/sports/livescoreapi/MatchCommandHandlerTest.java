@@ -28,8 +28,8 @@ class MatchCommandHandlerTest {
         matchCommandHandler.handle(startCommand);
 
         verify(eventBus).post(any(MatchStartedEvent.class));
-        assertTrue(matchCommandHandler.getMatch().isPlaying());
-        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
+        assertTrue(matchCommandHandler.getMatch().isBallInPlay());
+        assertThat(matchCommandHandler.getMatch().getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
 
     @Test
@@ -63,7 +63,7 @@ class MatchCommandHandlerTest {
         matchCommandHandler.handle(endCommand);
 
         verify(eventBus, times(1)).post(any(MatchEndedEvent.class));
-        assertFalse(matchCommandHandler.getMatch().isPlaying());
+        assertFalse(matchCommandHandler.getMatch().isBallInPlay());
     }
 
     @Test
@@ -78,7 +78,7 @@ class MatchCommandHandlerTest {
         matchCommandHandler.handle(endPeriodCommand);
 
         verify(eventBus, times(1)).post(any(PeriodEndedEvent.class));
-        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
+        assertThat(matchCommandHandler.getMatch().getCurrentPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
     }
 
     @Test
@@ -96,6 +96,6 @@ class MatchCommandHandlerTest {
         matchCommandHandler.handle(startPeriodCommand);
 
         verify(eventBus, times(1)).post(any(PeriodStartedEvent.class));
-        assertThat(matchCommandHandler.getMatch().getPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
+        assertThat(matchCommandHandler.getMatch().getCurrentPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
     }
 }

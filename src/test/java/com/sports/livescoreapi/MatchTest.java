@@ -23,7 +23,7 @@ class MatchTest {
         match.start();
 
         assertThat(match)
-                .extracting("aggregateId", "playing")
+                .extracting("aggregateId", "ballInPlay")
                 .contains(matchId, true);
     }
 
@@ -60,7 +60,7 @@ class MatchTest {
         match.start();
         match.end();
 
-        assertFalse(match.isPlaying());
+        assertFalse(match.isBallInPlay());
     }
 
     @Test
@@ -70,7 +70,7 @@ class MatchTest {
 
         match.start();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
 
     @Test
@@ -81,7 +81,7 @@ class MatchTest {
         match.start();
         match.endPeriod();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
     }
 
     @Test
@@ -91,7 +91,7 @@ class MatchTest {
 
         match.endPeriod();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.NONE);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.NONE);
     }
 
     @Test
@@ -103,7 +103,7 @@ class MatchTest {
         match.endPeriod();
         match.startPeriod();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
     }
 
     @Test
@@ -114,7 +114,7 @@ class MatchTest {
         match.start();
         match.startPeriod();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
 
     @Test
@@ -127,7 +127,7 @@ class MatchTest {
         match.startPeriod();
         match.endPeriod();
 
-        assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
+        assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
     }
 
     @Test

@@ -10,64 +10,68 @@ import java.util.UUID;
 @Getter
 public class Match extends Aggregate {
 
-    private boolean playing;
+    private boolean ballInPlay;
     private LocalDateTime date;
     private Team home;
     private Team visitors;
     private Score score;
-    private MatchPeriod period;
+    private MatchPeriod currentPeriod;
     private Optional<Score> firstPeriodScore;
     private Optional<Score> secondPeriodScore;
 
     public Match(UUID matchId) {
         super(matchId);
         score = new Score();
-        period = MatchPeriod.NONE;
+        currentPeriod = MatchPeriod.NONE;
         firstPeriodScore = Optional.empty();
         secondPeriodScore = Optional.empty();
     }
 
     public void start() {
-        playing = true;
+        ballInPlay = true;
         startPeriod();
     }
 
     public void scoreForHome() {
-        if (playing) {
+        if (ballInPlay) {
             score.incrementHome();
         }
     }
 
     public void scoreForVisitors() {
-        if (playing) {
+        if (ballInPlay) {
             score.incrementVisitors();
         }
     }
 
     public void end() {
-        playing = false;
+        ballInPlay = false;
     }
 
     public void startPeriod() {
-        switch (period) {
+        switch (currentPeriod) {
             case NONE:
-                period = MatchPeriod.FIRST_PERIOD;
+                currentPeriod = MatchPeriod.FIRST_PERIOD;
+                ballInPlay = true;
                 break;
             case HALF_TIME:
-                period = MatchPeriod.SECOND_PERIOD;
+                currentPeriod = MatchPeriod.SECOND_PERIOD;
+                ballInPlay = true;
                 break;
         }
     }
 
     public void endPeriod() {
-        switch (period) {
+        switch (currentPeriod) {
             case FIRST_PERIOD:
-                period = MatchPeriod.HALF_TIME;
+                currentPeriod = MatchPeriod.HALF_TIME;
                 firstPeriodScore = Optional.of(score);
+                ballInPlay = false;
                 break;
             case SECOND_PERIOD:
-                period = MatchPeriod.FULL_TIME;
+                currentPeriod = MatchPeriod.FULL_TIME;
                 secondPeriodScore = Optional.of(score);
+                ballInPlay = false;
                 break;
         }
     }

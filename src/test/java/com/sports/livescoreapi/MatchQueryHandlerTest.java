@@ -75,7 +75,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatch(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("score.home", "score.visitors", "playing", "period").containsExactly(2, 1, false, MatchPeriod.FULL_TIME);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "ballInPlay", "currentPeriod").containsExactly(2, 1, false, MatchPeriod.FULL_TIME);
     }
 
     @Test
@@ -111,7 +111,7 @@ class MatchQueryHandlerTest {
         Optional<Match> match = matchQueryHandler.getMatchAtMinute(aggregateId, 30);
 
         assertThat(match.isPresent()).isTrue();
-        assertThat(match.get()).extracting("score.home", "score.visitors", "playing").containsExactly(2, 0, true);
+        assertThat(match.get()).extracting("score.home", "score.visitors", "ballInPlay").containsExactly(2, 0, true);
     }
 
     @Test
