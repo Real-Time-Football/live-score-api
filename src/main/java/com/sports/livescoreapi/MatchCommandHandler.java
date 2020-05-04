@@ -42,9 +42,17 @@ public class MatchCommandHandler extends CommandHandler {
     @HandleCommand
     public void handle(ScoreCommand command) {
 
-        if (match == null) {
+        if (!isMatchInitialized()) {
             return;
             //todo apply validation and raise exception event
+        }
+
+        if (!isMatchStarted()) {
+            return;
+        }
+
+        if (!isBallInPlay()) {
+            return;
         }
 
         GoalScoredEvent event = new GoalScoredEvent(
@@ -63,7 +71,11 @@ public class MatchCommandHandler extends CommandHandler {
     @HandleCommand
     public void handle(EndMatchCommand command) {
 
-        if (match == null) {
+        if (!isMatchInitialized()) {
+            return;
+        }
+
+        if (!isMatchStarted()) {
             return;
         }
 
@@ -81,7 +93,15 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(EndPeriodCommand command) {
-        if (match == null) {
+        if (!isMatchInitialized()) {
+            return;
+        }
+
+        if (!isMatchStarted()) {
+            return;
+        }
+
+        if (!isBallInPlay()) {
             return;
         }
 
@@ -99,7 +119,15 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(StartPeriodCommand command) {
-        if (match == null) {
+        if (!isMatchInitialized()) {
+            return;
+        }
+
+        if (!isMatchStarted()) {
+            return;
+        }
+
+        if (isBallInPlay()) {
             return;
         }
 
@@ -113,5 +141,17 @@ public class MatchCommandHandler extends CommandHandler {
         match.apply(event);
 
         eventBus.post(event);
+    }
+
+    private boolean isMatchStarted() {
+        return match.getStatus() == MatchPlayingStatus.PLAYING;
+    }
+
+    private boolean isMatchInitialized() {
+        return match != null;
+    }
+
+    private boolean isBallInPlay() {
+        return match.isBallInPlay();
     }
 }
