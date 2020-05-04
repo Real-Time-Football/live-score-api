@@ -129,4 +129,41 @@ class MatchTest {
 
         assertThat(match.getPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
     }
+
+    @Test
+    void update_first_period_score_at_end() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.scoreForHome();
+        match.endPeriod();
+
+        assertThat(match.getFirstPeriodScore().get()).extracting("home", "visitors").contains(1, 0);
+    }
+
+    @Test
+    void update_second_period_score_at_end() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+        match.endPeriod();
+        match.startPeriod();
+        match.scoreForHome();
+        match.scoreForHome();
+        match.endPeriod();
+
+        assertThat(match.getSecondPeriodScore().get()).extracting("home", "visitors").contains(2, 0);
+    }
+
+    @Test
+    void do_not_update_first_period() {
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match(matchId);
+
+        match.start();
+
+        assertFalse(match.getFirstPeriodScore().isPresent());
+    }
 }

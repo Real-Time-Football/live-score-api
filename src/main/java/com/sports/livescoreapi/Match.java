@@ -4,6 +4,7 @@ import com.sports.livescoreapi.events.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -15,11 +16,15 @@ public class Match extends Aggregate {
     private Team visitors;
     private Score score;
     private MatchPeriod period;
+    private Optional<Score> firstPeriodScore;
+    private Optional<Score> secondPeriodScore;
 
     public Match(UUID matchId) {
         super(matchId);
         score = new Score();
         period = MatchPeriod.NONE;
+        firstPeriodScore = Optional.empty();
+        secondPeriodScore = Optional.empty();
     }
 
     public void start() {
@@ -58,9 +63,11 @@ public class Match extends Aggregate {
         switch (period) {
             case FIRST_PERIOD:
                 period = MatchPeriod.HALF_TIME;
+                firstPeriodScore = Optional.of(score);
                 break;
             case SECOND_PERIOD:
                 period = MatchPeriod.FULL_TIME;
+                secondPeriodScore = Optional.of(score);
                 break;
         }
     }
