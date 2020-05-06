@@ -53,23 +53,13 @@ public class CommandBus {
     private <T extends Command> void startRegisteredHandler(T command) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (commandHandlerStarters.containsKey(command.getClass()))
         {
-            Class<?> commandType = commandHandlerStarters.get(command.getClass());
-            CommandHandler handlerInstance;
-
-            handlerInstance = (CommandHandler) commandType.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
+            Class<?> handlerType = commandHandlerStarters.get(command.getClass());
+            CommandHandler handlerInstance = (CommandHandler) handlerType.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
 
             if (handlerInstance == null)
                 return;
 
-            Optional<Method> starterMethod = getMethodAnnotatedWith(command, handlerInstance.getClass(), HandleStarterCommand.class);
-
-            if(!starterMethod.isPresent()) {
-                return;
-            }
-
-            starterMethod.get().invoke(handlerInstance, command);
-
-            commandHandlerInstances.putIfAbsent(handlerInstance.getAggregateId(), handlerInstance);
+            commandHandlerInstances.putIfAbsent(command.getAggregateId(), handlerInstance);
         }
     }
 

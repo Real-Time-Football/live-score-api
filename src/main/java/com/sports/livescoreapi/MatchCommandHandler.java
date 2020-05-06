@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter(AccessLevel.PRIVATE)
 public class MatchCommandHandler extends CommandHandler {
@@ -17,7 +19,7 @@ public class MatchCommandHandler extends CommandHandler {
         this.eventBus = eventBus;
     }
 
-    @HandleStarterCommand
+    @HandleCommand
     public void handle(StartMatchCommand command) {
 
         this.setAggregateId(command.getAggregateId());
@@ -41,6 +43,8 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(ScoreCommand command) {
+
+        rehydrateMatch(command.getAggregateId());
 
         if (!isMatchInitialized()) {
             return;
@@ -71,6 +75,8 @@ public class MatchCommandHandler extends CommandHandler {
     @HandleCommand
     public void handle(EndMatchCommand command) {
 
+        rehydrateMatch(command.getAggregateId());
+
         if (!isMatchInitialized()) {
             return;
         }
@@ -93,6 +99,9 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(EndPeriodCommand command) {
+
+        rehydrateMatch(command.getAggregateId());
+
         if (!isMatchInitialized()) {
             return;
         }
@@ -119,6 +128,9 @@ public class MatchCommandHandler extends CommandHandler {
 
     @HandleCommand
     public void handle(StartPeriodCommand command) {
+
+        rehydrateMatch(command.getAggregateId());
+
         if (!isMatchInitialized()) {
             return;
         }
@@ -153,5 +165,11 @@ public class MatchCommandHandler extends CommandHandler {
 
     private boolean isBallInPlay() {
         return match.isBallInPlay();
+    }
+
+    private void rehydrateMatch(UUID aggregateId) {
+        if (match == null) {
+            match = eventBus.replayMatchEventStream(aggregateId).orElse(null);
+        }
     }
 }
