@@ -1,10 +1,13 @@
 package com.sports.livescoreapi;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class MatchCacheRepository implements MatchRepository {
 
     private final Map<UUID, Match> cachedMatches = new HashMap<>();

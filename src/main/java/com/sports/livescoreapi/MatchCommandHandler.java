@@ -169,7 +169,7 @@ public class MatchCommandHandler extends CommandHandler {
 
     private void rehydrateMatch(UUID aggregateId) {
         if (match == null) {
-            match = eventBus.replayMatchEventStream(aggregateId).orElse(null);
+            match = eventBus.getMatchEventHandler().replayMatchEventStream(aggregateId).orElse(null);
         }
     }
 }

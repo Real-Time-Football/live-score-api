@@ -23,6 +23,9 @@ public class CommandBusIntegrationTest {
     EventRepository eventRepository;
 
     @Autowired
+    MatchRepository matchRepository;
+
+    @Autowired
     MatchQueryHandler matchQueryHandler;
 
     private final String USER_ID = "user_x";

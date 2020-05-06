@@ -12,7 +12,7 @@ import java.util.*;
 @Service
 public class CommandBus {
 
-    private EventBus eventBus;
+    private final EventBus eventBus;
 
     public CommandBus(EventBus eventBus) {
 
