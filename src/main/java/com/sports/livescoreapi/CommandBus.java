@@ -33,7 +33,9 @@ public class CommandBus {
     public <T extends Command> void send(T command) throws ReflectiveOperationException {
         try {
 
-            startRegisteredHandler(command);
+            createHandlerGivenRegisteredStarter(command);
+
+            createHandlerForAggregateId(command);
 
             deliverCommandToHandler(command);
 
@@ -50,7 +52,7 @@ public class CommandBus {
         //todo Log errors with some framework
     }
 
-    private <T extends Command> void startRegisteredHandler(T command) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    private <T extends Command> void createHandlerGivenRegisteredStarter(T command) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (commandHandlerStarters.containsKey(command.getClass()))
         {
             Class<?> handlerType = commandHandlerStarters.get(command.getClass());
@@ -63,8 +65,24 @@ public class CommandBus {
         }
     }
 
-    private <T extends Command> void deliverCommandToHandler(T command) throws InvocationTargetException, IllegalAccessException {
+    private <T extends Command> void createHandlerForAggregateId(T command) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        if (!commandHandlerInstances.containsKey(command.getAggregateId())) {
+            for (Class<?> registeredHandler : commandHandlerStarters.values()) {
+                CommandHandler handlerInstance = (CommandHandler) registeredHandler.getDeclaredConstructor(EventBus.class).newInstance(eventBus);
 
+                if (handlerInstance == null)
+                    continue;
+
+                Optional<Method> handlerMethod = getMethodAnnotatedWith(command, handlerInstance.getClass(), HandleCommand.class);
+
+                if(handlerMethod.isPresent()) {
+                    commandHandlerInstances.putIfAbsent(command.getAggregateId(), handlerInstance);
+                }
+            }
+        }
+    }
+
+    private <T extends Command> void deliverCommandToHandler(T command) throws InvocationTargetException, IllegalAccessException {
         if (commandHandlerInstances.containsKey(command.getAggregateId()))
         {
             Object commandHandler = commandHandlerInstances.get(command.getAggregateId());
