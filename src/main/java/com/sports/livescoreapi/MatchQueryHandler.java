@@ -8,11 +8,11 @@ import java.util.UUID;
 @Service
 public class MatchQueryHandler {
 
-    private final MatchEventHandler eventHandler;
+    private final MatchEventHelper eventHelper;
     private final MatchRepository matchRepository;
 
-    public MatchQueryHandler(MatchEventHandler eventHandler, MatchRepository matchRepository) {
-        this.eventHandler = eventHandler;
+    public MatchQueryHandler(MatchEventHelper eventHelper, MatchRepository matchRepository) {
+        this.eventHelper = eventHelper;
         this.matchRepository = matchRepository;
     }
 
@@ -21,7 +21,7 @@ public class MatchQueryHandler {
         Optional<Match> match = matchRepository.findByAggregateId(matchId);
 
         if (!match.isPresent()) {
-            eventHandler.replayMatchEventStream(matchId);
+            eventHelper.replayMatchEventStream(matchId);
         }
 
         return match;

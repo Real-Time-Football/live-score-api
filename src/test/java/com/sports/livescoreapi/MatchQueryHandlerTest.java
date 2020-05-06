@@ -15,7 +15,7 @@ class MatchQueryHandlerTest {
 
     @Test
     void get_match_form_repository() {
-        MatchEventHandler eventHandler = mock(MatchEventHandler.class);
+        MatchEventHelper eventHelper = mock(MatchEventHelper.class);
         MatchRepository matchRepository = mock(MatchRepository.class);
 
         UUID aggregateId = UUID.randomUUID();
@@ -32,7 +32,7 @@ class MatchQueryHandlerTest {
         when(matchRepository.findByAggregateId(aggregateId))
                 .thenReturn(Optional.of(match));
 
-        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventHandler, matchRepository);
+        MatchQueryHandler matchQueryHandler = new MatchQueryHandler(eventHelper, matchRepository);
 
         Optional<Match> returnedMatch = matchQueryHandler.getMatch(aggregateId);
 

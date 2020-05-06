@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class MatchEventHandler {
+public class MatchEventHelper {
 
     private final MatchRepository matchRepository;
     private final EventRepository eventStore;
 
-    public MatchEventHandler(MatchRepository matchRepository, EventRepository eventStore) {
+    public MatchEventHelper(MatchRepository matchRepository, EventRepository eventStore) {
         this.matchRepository = matchRepository;
         this.eventStore = eventStore;
     }

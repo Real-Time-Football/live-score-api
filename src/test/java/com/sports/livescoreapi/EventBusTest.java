@@ -12,18 +12,18 @@ import static org.mockito.Mockito.*;
 class EventBusTest {
 
     private EventRepository eventStore;
-    private MatchEventHandler eventHandler;
+    private MatchEventHelper eventHelper;
 
     @BeforeEach
     void setUp() {
         eventStore = mock(EventRepository.class);
-        eventHandler = mock(MatchEventHandler.class);
+        eventHelper = mock(MatchEventHelper.class);
         when(eventStore.save(any(Event.class))).thenReturn(null);
     }
 
     @Test
     void persist_events() {
-        EventBus eventBus = new EventBus(eventStore, eventHandler);
+        EventBus eventBus = new EventBus(eventStore, eventHelper);
 
         MatchStartedEvent startedEvent = aMatchStartedEvent().build();
 

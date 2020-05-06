@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 public class EventBus {
     
     private final EventRepository eventStore;
-    private final MatchEventHandler eventHandler;
+    private final MatchEventHelper eventHelper;
 
-    public EventBus(EventRepository eventStore, MatchEventHandler eventHandler) {
+    public EventBus(EventRepository eventStore, MatchEventHelper eventHelper) {
         this.eventStore = eventStore;
-        this.eventHandler = eventHandler;
+        this.eventHelper = eventHelper;
     }
 
     public <T extends Event> void post(T event) {
@@ -20,15 +20,15 @@ public class EventBus {
     }
 
     private <T extends Event> void notifyHandler(T event) {
-        eventHandler.replayMatchEventStream(event.getAggregateId());
+        eventHelper.replayMatchEventStream(event.getAggregateId());
     }
 
     private <T extends Event> void persistEvent(T event) {
         eventStore.save(event);
     }
 
-    public MatchEventHandler getMatchEventHandler() {
-        return eventHandler;
+    public MatchEventHelper getMatchEventHandler() {
+        return eventHelper;
     }
 }
 
