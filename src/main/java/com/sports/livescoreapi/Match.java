@@ -20,6 +20,8 @@ public class Match extends Aggregate {
     private Optional<Score> firstPeriodScore;
     private Optional<Score> secondPeriodScore;
 
+    private MatchState currentState;
+
     public Match(UUID matchId) {
         super(matchId);
         status = MatchPlayingStatus.PENDING;
@@ -27,22 +29,23 @@ public class Match extends Aggregate {
         currentPeriod = MatchPeriod.NONE;
         firstPeriodScore = Optional.empty();
         secondPeriodScore = Optional.empty();
+        currentState = new NotStartedEvent();
     }
 
-    public void start() {
-        ballInPlay = true;
-        status = MatchPlayingStatus.PLAYING;
-        startPeriod();
+    public void configure(LocalDateTime date, Team home, Team visitors) {
+        this.date = date;
+        this.home = home;
+        this.visitors = visitors;
     }
 
-    public void scoreForHome() {
-        if (ballInPlay) {
+    public void setState(MatchState matchState) {
+        currentState = matchState;
+    }
+
+    public void score(TeamSide teamSide) {
+        if (teamSide == TeamSide.HOME) {
             score.incrementHome();
-        }
-    }
-
-    public void scoreForVisitors() {
-        if (ballInPlay) {
+        } else if(teamSide == TeamSide.VISITORS) {
             score.incrementVisitors();
         }
     }
@@ -52,61 +55,46 @@ public class Match extends Aggregate {
         status = MatchPlayingStatus.ENDED;
     }
 
-    public void startPeriod() {
-        switch (currentPeriod) {
-            case NONE:
-                currentPeriod = MatchPeriod.FIRST_PERIOD;
-                ballInPlay = true;
-                break;
-            case HALF_TIME:
-                currentPeriod = MatchPeriod.SECOND_PERIOD;
-                ballInPlay = true;
-                break;
-        }
+    public void startFirstPeriod() {
+        status = MatchPlayingStatus.PLAYING;
+        currentPeriod = MatchPeriod.FIRST_PERIOD;
+        ballInPlay = true;
     }
 
-    public void endPeriod() {
-        switch (currentPeriod) {
-            case FIRST_PERIOD:
-                currentPeriod = MatchPeriod.HALF_TIME;
-                firstPeriodScore = Optional.of(score);
-                ballInPlay = false;
-                break;
-            case SECOND_PERIOD:
-                currentPeriod = MatchPeriod.FULL_TIME;
-                secondPeriodScore = Optional.of(score);
-                ballInPlay = false;
-                break;
-        }
+    public void startSecondPeriod() {
+        currentPeriod = MatchPeriod.SECOND_PERIOD;
+        ballInPlay = true;
     }
 
-    public void apply(MatchStartedEvent matchStartedEvent) {
-        this.date = matchStartedEvent.getDate();
-        this.home = matchStartedEvent.getHome();
-        this.visitors = matchStartedEvent.getVisitors();
-        start();
+    public void endFirstPeriod() {
+        currentPeriod = MatchPeriod.HALF_TIME;
+        firstPeriodScore = Optional.of(score);
+        ballInPlay = false;
     }
 
-    public void apply(GoalScoredEvent goalScoredEvent) {
-        switch (goalScoredEvent.getTeamSide()) {
-            case HOME:
-                scoreForHome();
-                break;
-            case  VISITORS:
-                scoreForVisitors();
-                break;
-        }
+    public void endSecondPeriod() {
+        currentPeriod = MatchPeriod.FULL_TIME;
+        secondPeriodScore = Optional.of(score);
+        ballInPlay = false;
     }
 
-    public void apply(MatchEndedEvent matchEndedEvent) {
-        end();
+    public void apply(PeriodEndedEvent event) {
+        currentState.apply(this, event);
     }
 
-    public void apply(PeriodEndedEvent periodEndedEvent) {
-        endPeriod();
+    public void apply(MatchStartedEvent event) {
+        currentState.apply(this, event);
     }
 
-    public void apply(PeriodStartedEvent periodStartedEvent) {
-        startPeriod();
+    public void apply(GoalScoredEvent event) {
+        currentState.apply(this, event);
+    }
+
+    public void apply(MatchEndedEvent event) {
+        currentState.apply(this, event);
+    }
+
+    public void apply(PeriodStartedEvent event) {
+        currentState.apply(this, event);
     }
 }

@@ -20,7 +20,7 @@ class MatchTest {
 
         Match match = new Match(matchId);
 
-        match.start();
+        match.startFirstPeriod();
 
         assertThat(match)
                 .extracting("aggregateId", "ballInPlay", "status")
@@ -32,9 +32,9 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.scoreForHome();
-        match.scoreForVisitors();
+        match.startFirstPeriod();
+        match.score(TeamSide.HOME);
+        match.score(TeamSide.VISITORS);
 
         assertThat(match.getScore().getHome()).isEqualTo(1);
         assertThat(match.getScore().getVisitors()).isEqualTo(1);
@@ -45,8 +45,8 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.scoreForHome();
-        match.scoreForVisitors();
+        match.score(TeamSide.HOME);
+        match.score(TeamSide.VISITORS);
 
         assertThat(match.getScore().getHome()).isEqualTo(0);
         assertThat(match.getScore().getVisitors()).isEqualTo(0);
@@ -57,7 +57,7 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
+        match.startFirstPeriod();
         match.end();
 
         assertThat(match)
@@ -70,7 +70,7 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
+        match.startFirstPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
@@ -80,8 +80,8 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.endPeriod();
+        match.startFirstPeriod();
+        match.endFirstPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.HALF_TIME);
     }
@@ -91,7 +91,7 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.endPeriod();
+        match.endFirstPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.NONE);
     }
@@ -101,9 +101,9 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.endPeriod();
-        match.startPeriod();
+        match.startFirstPeriod();
+        match.endFirstPeriod();
+        match.startSecondPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.SECOND_PERIOD);
     }
@@ -113,8 +113,8 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.startPeriod();
+        match.startFirstPeriod();
+        match.endFirstPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
@@ -124,10 +124,10 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.endPeriod();
-        match.startPeriod();
-        match.endPeriod();
+        match.startFirstPeriod();
+        match.endFirstPeriod();
+        match.startSecondPeriod();
+        match.endSecondPeriod();
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FULL_TIME);
     }
@@ -137,9 +137,9 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.scoreForHome();
-        match.endPeriod();
+        match.startFirstPeriod();
+        match.score(TeamSide.HOME);
+        match.endFirstPeriod();
 
         assertThat(match.getFirstPeriodScore().get()).extracting("home", "visitors").contains(1, 0);
     }
@@ -149,12 +149,12 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
-        match.endPeriod();
-        match.startPeriod();
-        match.scoreForHome();
-        match.scoreForHome();
-        match.endPeriod();
+        match.startFirstPeriod();
+        match.endFirstPeriod();
+        match.startSecondPeriod();
+        match.score(TeamSide.HOME);
+        match.score(TeamSide.HOME);
+        match.endSecondPeriod();
 
         assertThat(match.getSecondPeriodScore().get()).extracting("home", "visitors").contains(2, 0);
     }
@@ -164,7 +164,7 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.start();
+        match.startFirstPeriod();
 
         assertFalse(match.getFirstPeriodScore().isPresent());
     }
