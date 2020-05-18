@@ -1,6 +1,6 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.commands;
 
-import com.sports.livescoreapi.commands.Command;
+import com.sports.livescoreapi.events.EventBus;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 

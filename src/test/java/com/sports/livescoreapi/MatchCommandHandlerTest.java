@@ -1,6 +1,8 @@
 package com.sports.livescoreapi;
 
 import com.sports.livescoreapi.commands.*;
+import com.sports.livescoreapi.domain.MatchPeriod;
+import com.sports.livescoreapi.domain.TeamSide;
 import com.sports.livescoreapi.events.*;
 import org.junit.jupiter.api.Test;
 

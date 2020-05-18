@@ -1,4 +1,4 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.commands;
 
 import lombok.AccessLevel;
 import lombok.Getter;

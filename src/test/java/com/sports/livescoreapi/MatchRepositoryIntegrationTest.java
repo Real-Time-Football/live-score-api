@@ -1,5 +1,8 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.queries.MatchRepository;
+import com.sports.livescoreapi.repositories.MatchCacheRepository;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 

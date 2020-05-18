@@ -1,8 +1,16 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.commands.CommandBus;
+import com.sports.livescoreapi.commands.MatchCommandHandler;
 import com.sports.livescoreapi.commands.ScoreCommand;
 import com.sports.livescoreapi.commands.StartMatchCommand;
+import com.sports.livescoreapi.events.EventBus;
+import com.sports.livescoreapi.events.EventRepository;
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.domain.TeamSide;
 import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.queries.MatchQueryHandler;
+import com.sports.livescoreapi.queries.MatchRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

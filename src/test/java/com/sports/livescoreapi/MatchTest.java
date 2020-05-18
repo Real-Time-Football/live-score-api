@@ -1,5 +1,9 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.domain.MatchPeriod;
+import com.sports.livescoreapi.domain.MatchScheduleStatus;
+import com.sports.livescoreapi.domain.TeamSide;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,7 +29,7 @@ class MatchTest {
 
         assertThat(match)
                 .extracting("aggregateId", "ballInPlay", "status")
-                .contains(matchId, true, MatchPlayingStatus.PLAYING);
+                .contains(matchId, true, MatchScheduleStatus.PLAYING);
     }
 
     @Test
@@ -64,7 +68,7 @@ class MatchTest {
 
         assertThat(match)
                 .extracting("ballInPlay", "status")
-                .contains(false, MatchPlayingStatus.ENDED);
+                .contains(false, MatchScheduleStatus.ENDED);
     }
 
     @Test

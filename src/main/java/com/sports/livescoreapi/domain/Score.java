@@ -1,4 +1,4 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.domain;
 
 import lombok.Getter;
 

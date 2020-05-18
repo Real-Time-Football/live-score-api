@@ -1,4 +1,4 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.domain;
 
 import com.sports.livescoreapi.events.MatchEndedEvent;
 import com.sports.livescoreapi.events.PeriodStartedEvent;

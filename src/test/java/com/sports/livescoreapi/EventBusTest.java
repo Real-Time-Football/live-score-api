@@ -1,7 +1,6 @@
 package com.sports.livescoreapi;
 
-import com.sports.livescoreapi.events.Event;
-import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.events.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +11,12 @@ import static org.mockito.Mockito.*;
 class EventBusTest {
 
     private EventRepository eventStore;
-    private MatchEventHelper eventHelper;
+    private MatchStreamProcessor eventHelper;
 
     @BeforeEach
     void setUp() {
         eventStore = mock(EventRepository.class);
-        eventHelper = mock(MatchEventHelper.class);
+        eventHelper = mock(MatchStreamProcessor.class);
         when(eventStore.save(any(Event.class))).thenReturn(null);
     }
 

@@ -1,6 +1,6 @@
 package com.sports.livescoreapi.fixtures;
 
-import com.sports.livescoreapi.Team;
+import com.sports.livescoreapi.domain.Team;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 
 import java.time.LocalDateTime;

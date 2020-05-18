@@ -1,6 +1,7 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.events;
 
-import com.sports.livescoreapi.events.*;
+import com.sports.livescoreapi.queries.MatchRepository;
+import com.sports.livescoreapi.domain.Match;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -9,12 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class MatchEventHelper {
+public class MatchStreamProcessor {
 
     private final MatchRepository matchRepository;
     private final EventRepository eventStore;
 
-    public MatchEventHelper(MatchRepository matchRepository, EventRepository eventStore) {
+    public MatchStreamProcessor(MatchRepository matchRepository, EventRepository eventStore) {
         this.matchRepository = matchRepository;
         this.eventStore = eventStore;
     }

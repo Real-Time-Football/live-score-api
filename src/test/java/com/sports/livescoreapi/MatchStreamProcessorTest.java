@@ -1,6 +1,8 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.domain.*;
 import com.sports.livescoreapi.events.*;
+import com.sports.livescoreapi.queries.MatchRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MatchEventHelperTest {
+public class MatchStreamProcessorTest {
 
     @Test
     void replay_match_with_teams_configured() {
@@ -34,7 +36,7 @@ public class MatchEventHelperTest {
         when(matchRepository.findByAggregateId(aggregateId))
                 .thenReturn(Optional.empty());
 
-        MatchEventHelper eventHelper = new MatchEventHelper(matchRepository, eventRepository);
+        MatchStreamProcessor eventHelper = new MatchStreamProcessor(matchRepository, eventRepository);
 
         Optional<Match> match = eventHelper.replayMatchEventStream(aggregateId);
 
@@ -77,7 +79,7 @@ public class MatchEventHelperTest {
         when(matchRepository.findByAggregateId(aggregateId))
                 .thenReturn(Optional.empty());
 
-        MatchEventHelper eventHelper = new MatchEventHelper(matchRepository, eventRepository);
+        MatchStreamProcessor eventHelper = new MatchStreamProcessor(matchRepository, eventRepository);
 
         Optional<Match> match = eventHelper.replayMatchEventStream(aggregateId);
 

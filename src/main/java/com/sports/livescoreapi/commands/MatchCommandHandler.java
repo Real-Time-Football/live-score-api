@@ -1,6 +1,9 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.commands;
 
-import com.sports.livescoreapi.commands.*;
+import com.sports.livescoreapi.events.EventBus;
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.domain.MatchScheduleStatus;
+import com.sports.livescoreapi.domain.Team;
 import com.sports.livescoreapi.events.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -156,7 +159,7 @@ public class MatchCommandHandler extends CommandHandler {
     }
 
     private boolean isMatchStarted() {
-        return match.getStatus() == MatchPlayingStatus.PLAYING;
+        return match.getStatus() == MatchScheduleStatus.PLAYING;
     }
 
     private boolean isMatchInitialized() {

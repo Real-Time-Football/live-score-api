@@ -1,5 +1,7 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.events.EventRepository;
+import com.sports.livescoreapi.domain.TeamSide;
 import com.sports.livescoreapi.events.Event;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchEndedEvent;

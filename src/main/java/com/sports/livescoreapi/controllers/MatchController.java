@@ -1,6 +1,8 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.controllers;
 
 import com.sports.livescoreapi.commands.*;
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.queries.MatchQueryHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,5 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.events;
 
-import com.sports.livescoreapi.events.Event;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,15 +1,14 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.events;
 
-import com.sports.livescoreapi.events.Event;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EventBus {
     
     private final EventRepository eventStore;
-    private final MatchEventHelper eventHelper;
+    private final MatchStreamProcessor eventHelper;
 
-    public EventBus(EventRepository eventStore, MatchEventHelper eventHelper) {
+    public EventBus(EventRepository eventStore, MatchStreamProcessor eventHelper) {
         this.eventStore = eventStore;
         this.eventHelper = eventHelper;
     }
@@ -27,7 +26,7 @@ public class EventBus {
         eventStore.save(event);
     }
 
-    public MatchEventHelper getMatchEventHandler() {
+    public MatchStreamProcessor getMatchEventHandler() {
         return eventHelper;
     }
 }

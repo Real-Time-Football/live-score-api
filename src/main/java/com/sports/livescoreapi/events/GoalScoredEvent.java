@@ -1,6 +1,6 @@
 package com.sports.livescoreapi.events;
 
-import com.sports.livescoreapi.TeamSide;
+import com.sports.livescoreapi.domain.TeamSide;
 import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.UUID;

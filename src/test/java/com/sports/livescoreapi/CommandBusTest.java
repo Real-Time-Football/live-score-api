@@ -1,7 +1,11 @@
 package com.sports.livescoreapi;
 
+import com.sports.livescoreapi.commands.CommandBus;
+import com.sports.livescoreapi.commands.MatchCommandHandler;
 import com.sports.livescoreapi.commands.ScoreCommand;
 import com.sports.livescoreapi.commands.StartMatchCommand;
+import com.sports.livescoreapi.domain.TeamSide;
+import com.sports.livescoreapi.events.EventBus;
 import com.sports.livescoreapi.events.GoalScoredEvent;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 import org.junit.jupiter.api.Test;

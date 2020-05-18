@@ -1,4 +1,4 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sports.livescoreapi.events.*;
@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Match extends Aggregate {
 
     private boolean ballInPlay;
-    private MatchPlayingStatus status;
+    private MatchScheduleStatus status;
     private LocalDateTime date;
     private Team home;
     private Team visitors;
@@ -26,12 +26,12 @@ public class Match extends Aggregate {
 
     public Match(UUID matchId) {
         super(matchId);
-        status = MatchPlayingStatus.PENDING;
+        status = MatchScheduleStatus.PENDING;
         score = new Score();
         currentPeriod = MatchPeriod.NONE;
         firstPeriodScore = Optional.empty();
         secondPeriodScore = Optional.empty();
-        currentState = new NotStartedEvent();
+        currentState = new NotStartedState();
     }
 
     public void configure(LocalDateTime date, Team home, Team visitors) {
@@ -57,11 +57,11 @@ public class Match extends Aggregate {
 
     public void end() {
         ballInPlay = false;
-        status = MatchPlayingStatus.ENDED;
+        status = MatchScheduleStatus.ENDED;
     }
 
     public void startFirstPeriod() {
-        status = MatchPlayingStatus.PLAYING;
+        status = MatchScheduleStatus.PLAYING;
         currentPeriod = MatchPeriod.FIRST_PERIOD;
         ballInPlay = true;
     }

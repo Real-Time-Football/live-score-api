@@ -2,6 +2,10 @@ package com.sports.livescoreapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sports.livescoreapi.commands.*;
+import com.sports.livescoreapi.controllers.MatchController;
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.domain.TeamSide;
+import com.sports.livescoreapi.queries.MatchQueryHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

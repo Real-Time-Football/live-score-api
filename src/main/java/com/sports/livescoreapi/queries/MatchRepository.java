@@ -1,5 +1,6 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.queries;
 
+import com.sports.livescoreapi.domain.Match;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

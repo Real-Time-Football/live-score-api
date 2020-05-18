@@ -1,5 +1,7 @@
-package com.sports.livescoreapi;
+package com.sports.livescoreapi.repositories;
 
+import com.sports.livescoreapi.domain.Match;
+import com.sports.livescoreapi.queries.MatchRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
