@@ -1,5 +1,6 @@
 package com.sports.livescoreapi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sports.livescoreapi.events.*;
 import lombok.Getter;
 
@@ -20,6 +21,7 @@ public class Match extends Aggregate {
     private Optional<Score> firstPeriodScore;
     private Optional<Score> secondPeriodScore;
 
+    @JsonIgnore
     private MatchState currentState;
 
     public Match(UUID matchId) {
@@ -43,10 +45,13 @@ public class Match extends Aggregate {
     }
 
     public void score(TeamSide teamSide) {
-        if (teamSide == TeamSide.HOME) {
-            score.incrementHome();
-        } else if(teamSide == TeamSide.VISITORS) {
-            score.incrementVisitors();
+        switch (teamSide) {
+            case HOME:
+                score.incrementHome();
+                break;
+            case VISITORS:
+                score.incrementVisitors();
+                break;
         }
     }
 
