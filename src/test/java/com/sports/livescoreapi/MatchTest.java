@@ -4,12 +4,19 @@ import com.sports.livescoreapi.domain.Match;
 import com.sports.livescoreapi.domain.MatchPeriod;
 import com.sports.livescoreapi.domain.MatchScheduleStatus;
 import com.sports.livescoreapi.domain.TeamSide;
+import com.sports.livescoreapi.events.GoalScoredEvent;
+import com.sports.livescoreapi.events.MatchStartedEvent;
+import com.sports.livescoreapi.events.PeriodEndedEvent;
+import com.sports.livescoreapi.events.PeriodStartedEvent;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static com.sports.livescoreapi.fixtures.GoalScoredEventFixture.aGoalScoredEvent;
+import static com.sports.livescoreapi.fixtures.MatchStartedEventFixture.aMatchStartedEvent;
+import static com.sports.livescoreapi.fixtures.PeriodEndedEventFixture.aPeriodEndedEvent;
+import static com.sports.livescoreapi.fixtures.PeriodStartedEventFixture.aPeriodStartedEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -37,6 +44,8 @@ class MatchTest {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
+        //todo: rewrite all tests to use method apply as public api
+
         match.startFirstPeriod();
         match.score(TeamSide.HOME);
         match.score(TeamSide.VISITORS);
@@ -46,13 +55,15 @@ class MatchTest {
     }
 
     @Test
-    @Disabled
     void do_not_scores_goal_when_match_is_not_started() {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.score(TeamSide.HOME);
-        match.score(TeamSide.VISITORS);
+        GoalScoredEvent goalHomeEvent = aGoalScoredEvent().withAggregateId(matchId).withTeamSide(TeamSide.HOME).build();
+        GoalScoredEvent goalVisitorsEvent = aGoalScoredEvent().withAggregateId(matchId).withTeamSide(TeamSide.VISITORS).build();
+
+        match.apply(goalHomeEvent);
+        match.apply(goalVisitorsEvent);
 
         assertThat(match.getScore().getHome()).isEqualTo(0);
         assertThat(match.getScore().getVisitors()).isEqualTo(0);
@@ -93,12 +104,13 @@ class MatchTest {
     }
 
     @Test
-    @Disabled
     void not_stop_period_when_no_period_started() {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.endFirstPeriod();
+        PeriodEndedEvent periodEndedEvent = aPeriodEndedEvent().withAggregateId(matchId).build();
+
+        match.apply(periodEndedEvent);
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.NONE);
     }
@@ -116,13 +128,17 @@ class MatchTest {
     }
 
     @Test
-    @Disabled
     void not_start_second_period_when_not_at_half_time() {
         UUID matchId = UUID.randomUUID();
         Match match = new Match(matchId);
 
-        match.startFirstPeriod();
-        match.endFirstPeriod();
+        MatchStartedEvent matchStartedEvent = aMatchStartedEvent().withAggregateId(matchId).build();
+        PeriodStartedEvent firstPeriodStartedEvent = aPeriodStartedEvent().withAggregateId(matchId).build();
+        PeriodStartedEvent secondPeriodStartedEvent = aPeriodStartedEvent().withAggregateId(matchId).build();
+
+        match.apply(matchStartedEvent);
+        match.apply(firstPeriodStartedEvent);
+        match.apply(secondPeriodStartedEvent);
 
         assertThat(match.getCurrentPeriod()).isEqualTo(MatchPeriod.FIRST_PERIOD);
     }
