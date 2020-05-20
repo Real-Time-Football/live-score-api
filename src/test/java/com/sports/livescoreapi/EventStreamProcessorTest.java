@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MatchStreamProcessorTest {
+public class EventStreamProcessorTest {
 
     @Test
     void replay_match_with_teams_configured() {
@@ -36,9 +36,9 @@ public class MatchStreamProcessorTest {
         when(matchRepository.findByAggregateId(aggregateId))
                 .thenReturn(Optional.empty());
 
-        MatchStreamProcessor eventHelper = new MatchStreamProcessor(matchRepository, eventRepository);
+        EventStreamProcessor streamProcessor = new EventStreamProcessor(matchRepository, eventRepository);
 
-        Optional<Match> match = eventHelper.replayMatchEventStream(aggregateId);
+        Optional<Match> match = streamProcessor.replayMatchEventStream(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
         assertThat(match.get()).extracting("home", "visitors")
@@ -79,9 +79,9 @@ public class MatchStreamProcessorTest {
         when(matchRepository.findByAggregateId(aggregateId))
                 .thenReturn(Optional.empty());
 
-        MatchStreamProcessor eventHelper = new MatchStreamProcessor(matchRepository, eventRepository);
+        EventStreamProcessor streamProcessor = new EventStreamProcessor(matchRepository, eventRepository);
 
-        Optional<Match> match = eventHelper.replayMatchEventStream(aggregateId);
+        Optional<Match> match = streamProcessor.replayMatchEventStream(aggregateId);
 
         assertThat(match.isPresent()).isTrue();
         assertThat(match.get()).extracting("score.home", "score.visitors", "ballInPlay", "currentPeriod").containsExactly(2, 1, false, MatchPeriod.FULL_TIME);

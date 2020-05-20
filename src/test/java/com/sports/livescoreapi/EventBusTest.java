@@ -11,12 +11,12 @@ import static org.mockito.Mockito.*;
 class EventBusTest {
 
     private EventRepository eventStore;
-    private MatchStreamProcessor eventHelper;
+    private EventStreamProcessor eventHelper;
 
     @BeforeEach
     void setUp() {
         eventStore = mock(EventRepository.class);
-        eventHelper = mock(MatchStreamProcessor.class);
+        eventHelper = mock(EventStreamProcessor.class);
         when(eventStore.save(any(Event.class))).thenReturn(null);
     }
 

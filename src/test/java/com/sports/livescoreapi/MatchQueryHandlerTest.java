@@ -2,7 +2,7 @@ package com.sports.livescoreapi;
 
 import com.sports.livescoreapi.domain.Match;
 import com.sports.livescoreapi.domain.Team;
-import com.sports.livescoreapi.events.MatchStreamProcessor;
+import com.sports.livescoreapi.events.EventStreamProcessor;
 import com.sports.livescoreapi.events.MatchStartedEvent;
 import com.sports.livescoreapi.queries.MatchQueryHandler;
 import com.sports.livescoreapi.queries.MatchRepository;
@@ -20,7 +20,7 @@ class MatchQueryHandlerTest {
 
     @Test
     void get_match_form_repository() {
-        MatchStreamProcessor eventHelper = mock(MatchStreamProcessor.class);
+        EventStreamProcessor eventHelper = mock(EventStreamProcessor.class);
         MatchRepository matchRepository = mock(MatchRepository.class);
 
         UUID aggregateId = UUID.randomUUID();

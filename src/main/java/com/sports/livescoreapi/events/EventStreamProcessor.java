@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class MatchStreamProcessor {
+public class EventStreamProcessor {
 
     private final MatchRepository matchRepository;
     private final EventRepository eventStore;
 
-    public MatchStreamProcessor(MatchRepository matchRepository, EventRepository eventStore) {
+    public EventStreamProcessor(MatchRepository matchRepository, EventRepository eventStore) {
         this.matchRepository = matchRepository;
         this.eventStore = eventStore;
     }
