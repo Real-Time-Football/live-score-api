@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  mongo.distancia:
+    image: mongo:3.6
+    container_name: live-score-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017-27019:27017-27019"
