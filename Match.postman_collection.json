@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "3fa53ccd-18b8-416a-ac02-7c96a3396301",
+		"name": "Match",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "StartRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"user-m\",\n    \"version\": \"1.0\",\n    \"date\": \"2020-04-29T21:30\",\n    \"teamHome\": \"PALMEIRAS\",\n    \"teamVisitors\": \"CORINTHIANS\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ScoreRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aggregateId\": \"0b89d5ea-7570-456e-864d-a4dc96d8b4f8\",\n    \"userId\": \"user-m\",\n    \"version\": \"1.0\",\n    \"teamSide\": \"HOME\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/score",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"score"
+					]
+				},
+				"description": "Score a goal for a team"
+			},
+			"response": []
+		},
+		{
+			"name": "StartPeriodRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aggregateId\": \"a48f4608-29ca-4765-bc60-59dcba351907\",\n    \"userId\": \"user-m\",\n    \"version\": \"1.0\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/start-period",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"start-period"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EndPeriodRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aggregateId\": \"a48f4608-29ca-4765-bc60-59dcba351907\",\n    \"userId\": \"user-m\",\n    \"version\": \"1.0\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/end-period",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"end-period"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EndRequest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"aggregateId\": \"a48f4608-29ca-4765-bc60-59dcba351907\",\n    \"userId\": \"user-m\",\n    \"version\": \"1.0\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/end",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"end"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMatch",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/0b89d5ea-7570-456e-864d-a4dc96d8b4f8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"0b89d5ea-7570-456e-864d-a4dc96d8b4f8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetEvents",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/match/6b79f3fb-c707-4bbc-9752-8d8575b1a259/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"match",
+						"6b79f3fb-c707-4bbc-9752-8d8575b1a259",
+						"events"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
